@@ -1,6 +1,6 @@
 {
     'name': 'Mercadolibre odoo',
-    'version': '17.0.0.1',
+    'version': '17.0.0.2',
     'description': 'Mercadolibre integration with odoo',
     'summary': 'Mercadolibre integration with odoo',
     'author': 'Vex Soluciones',
