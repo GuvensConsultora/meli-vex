@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="assets_backend" name="your_module backend assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <!-- Incluir el archivo CSS global -->
+            <link rel="stylesheet" href="/your_module/static/src/css/custom_styles.css"/>
+        </xpath>
+    </template>
+</odoo>

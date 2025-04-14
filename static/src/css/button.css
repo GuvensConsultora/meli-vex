@@ -1,0 +1,15 @@
+.custom-mercadolibre-button {
+    background-color: #eed130 !important;
+    border-color: #eed130 !important;
+    color: black !important;
+}
+
+th[data-name="meli_required"] {
+    background-color: #eed130 !important;
+    border-color: #eed130 !important;
+    color: black !important;
+}
+
+/* .o_data_row_decoration_info {
+    background-color: #eed130 !important;
+} */

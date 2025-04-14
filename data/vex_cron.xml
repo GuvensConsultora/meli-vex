@@ -1,0 +1,144 @@
+<odoo>
+    <data noupdate="1" >
+        <record id="vex_soluciones_ir_cron_automatico_meli_sale" model="ir.cron">
+            <field name="name">CRON AUTOMATICO IMPORT PRODUCT</field>
+            <field name="model_id" ref="model_vex_synchro"/>
+            <field name="state">code</field>
+            <field name="code">model.sync_import()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field name="active">True</field>
+        </record>
+
+        <record id="vex_soluciones_ir_cron_market_competition" model="ir.cron">
+            <field name="name">Ejecutar consumo de API de Más vendidos en Mercado Libre </field>
+            <field name="model_id" ref="model_vex_market_competition" />
+            <field name="state">code</field>
+            <field name="code">model.consumir_api_mercado_libre()</field> 
+            <field name="interval_number">10</field> 
+            <field name="interval_type">minutes</field> 
+            <field name="numbercall">-1</field>
+            <field name="active">True</field> 
+        </record>
+
+        <record id="vex_soluciones_ir_cron_market_competition_search_products" model="ir.cron">
+            <field name="name">Ejecutar consumo de API de Buscador de Productos </field>
+            <field name="model_id" ref="model_vex_market_competition" />
+            <field name="state">code</field>
+            <field name="code">model.consumir_api_buscador_de_productos()</field> 
+            <field name="interval_number">10</field> 
+            <field name="interval_type">minutes</field> 
+            <field name="numbercall">-1</field>
+            <field name="active">True</field> 
+        </record>
+
+        <!-- <record id="vex_soluciones_ir_cron_category_search_products" model="ir.cron">
+            <field name="name">Ejecutar consumo de API de Crear Categorias de Mercado Libre </field>
+            <field name="model_id" ref="model_vex_category" />
+            <field name="state">code</field>
+            <field name="code">model.consumir_api_categorias_mercado_libre()</field> 
+            <field name="interval_number">10</field> 
+            <field name="interval_type">minutes</field> 
+            <field name="numbercall">-1</field>
+            <field name="active">True</field> 
+        </record> -->
+
+        <record id="vex_soluciones_ir_cron_market_detail_items" model="ir.cron">
+            <field name="name">Ejecutar consumo de API de Crear Detalle de Productos </field>
+            <field name="model_id" ref="model_vex_market_competition" />
+            <field name="state">code</field>
+            <field name="code">model.consumir_api_detail_items()</field> 
+            <field name="interval_number">10</field> 
+            <field name="interval_type">minutes</field> 
+            <field name="numbercall">-1</field>
+            <field name="active">True</field> 
+        </record>
+
+        <record id="vex_soluciones_ir_cron_my_reputation" model="ir.cron">
+            <field name="name">Ejecutar consumo de API de Mi Reputacion</field>
+            <field name="model_id" ref="model_vex_soluciones_my_reputation" />
+            <field name="state">code</field>
+            <field name="code">model.consumir_my_reputation()</field> 
+            <field name="interval_number">10</field> 
+            <field name="interval_type">minutes</field> 
+            <field name="numbercall">-1</field>
+            <field name="active">True</field> 
+        </record>
+        
+        <record id="ir_cron_actualizar_informacion_category" model="ir.cron">
+            <field name="name">Actualizar publicaciones de Categoría</field>
+            <field name="model_id" ref="model_vex_category"/>
+            <field name="state">code</field>
+            <field name="code">model.actualizar_publicaciones_categoria()</field>
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_actualizar_score_product" model="ir.cron">
+            <field name="name">Actualizar datos de Score del producto</field>
+            <field name="model_id" ref="model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">model.consumir_score_performance()</field>
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_fetch_meli_description" model="ir.cron">
+            <field name="name">Traer Descripcion de productos de Mercado Libre</field>
+            <field name="model_id" ref="model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">model.fetch_meli_description()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_fetch_mercadolibre_sellers" model="ir.cron">
+            <field name="name">Actualizando cantidad de vendedores segun categorias</field>
+            <field name="model_id" ref="model_vex_category"/>
+            <field name="state">code</field>
+            <field name="code">model.actualizar_cantidad_vendedores_categoria()</field>
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">60</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ir_cron_fetch_category_participation" model="ir.cron">
+            <field name="name">Actualizando participacion de las categorias</field>
+            <field name="model_id" ref="model_vex_category"/>
+            <field name="state">code</field>
+            <field name="code">model.actualizando_participacion_categoria()</field>
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">60</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ir_cron_palabras_buscadas_por_categoria" model="ir.cron">
+            <field name="name">Palabras mas buscadas por categorias</field>
+            <field name="model_id" ref="model_vex_category"/>
+            <field name="state">code</field>
+            <field name="code">model.palabras_mas_buscadas()</field>
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">60</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="cron_update_mercadoLibre_price" model="ir.cron">
+            <field name="name">Actualizar Precios MercadoLibre</field>
+            <field name="model_id" ref="model_mercado_libre_product"/>
+            <field name="state">code</field>
+            <field name="code">model.update_mercadoLibre_price()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>
+    

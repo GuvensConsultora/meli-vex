@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_sale" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Localiza el lugar donde está el botón 'Entrega' -->
+           
+            <xpath expr="//notebook" position="inside">
+                <page name="vex_info" string="Api Vex Information">
+                    <group name="name" string="string">
+                        <field name="meli_code"></field>
+                        <field name="server_meli"></field>
+                        <field name="in_mediation"></field>
+                        <field name="expected_resolution"></field>                        
+                        <field name="mediation_solved"></field>    
+                        <field name="waiting_ml_intervention"></field>    
+                        <field name="store_type"></field> 
+                    </group>
+                </page>
+                <page name="meli_info" string="MELI Information">
+                    <group name="order" string="Order Information">
+                        <field name="meli_code" string="Order ID"></field>
+                        <field name="meli_order_comment"></field>
+                        <field name="pack_id"></field>
+                        <field name="fulfilled"></field>
+                        <field name="buying_mode"></field>
+                        <field name="instance_id"></field>
+                        <field name="product_sold_ids" widget="many2many_tags"></field>
+                    </group>
+                    <group name="shipment" string="Shipment Information">
+                            <field name="shipping_id"></field>
+                            <field name="shipping_type"></field>
+                            <field name="shipping_name" string="Logistic Type"></field>
+                            <field name="shipping_cost"></field>
+                            <field name="shipping_status"></field>
+                            <field name="listing_type_id"></field>                          
+                    </group>
+                    <group name="payments" string="Payments Information">
+                        <field name="meli_payment_code"></field>
+                        <field name="meli_collector_id"></field>
+                        <field name="meli_card_id"></field>
+                        <field name="meli_payment_code"></field>
+                        <field name="operation_type"></field>
+                        <field name="payment_type"></field>
+                        <field name="payment_status"></field>
+                        <field name="payment_status_detail"></field>
+                        <field name="marketplace_fee"></field>
+                        <field name="shipping_cost"></field>
+                    </group>
+                </page>   
+                <page name="label" string="Shipment Label">
+                    <button name="print_ticket" type="object"
+                        class="oe_stat_button btn-primary" icon="fa-spinner" invisible="shipping_status != 'ready_to_ship'"
+                        >
+                            Print Shipment Label
+                    </button>
+                    <field name="shipment_label" widget='pdf_viewer' nolabel="1"/>
+                </page>             
+            </xpath>
+
+            <xpath expr="//button[@name='action_view_delivery']" position="after">
+                <!-- Agrega tu botón -->
+                <button name="button_process_shipping_label"
+                    type="object"
+                    string="Print Shipping Label"
+                    class="btn-primary"
+                    icon="fa-print"
+                     context="{'shipping_id': shipping_id, 'meli_code': meli_code}"/>
+
+            </xpath>
+        </field>
+    </record>
+    <record id="view_order_tree_sale" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="before">
+                <field name="product_sold_ids" widget="many2many_tags"></field>
+                <field name="shipping_id"></field>
+                <field name="shipping_name" string="Logistic Type"></field>
+
+                <field name="instance_id" string="Instance ID"></field>
+                <!-- <field name="payment_status"></field> -->
+                
+                <field name="order_status" string="Orden Estatus"></field>
+                <field name="shipping_cost" string="Shipping Cost"></field>
+                <field name="marketplace_fee" string="Marketplace Fee"></field>
+                <field name="total_paid_amount" string="Total Paid Amount"></field>
+                <field name="net_profit" string="Net Gain"></field> 
+                
+               
+
+                <field name="listing_type_id" decoration-warning="listing_type_id=='gold_special'" decoration-success="listing_type_id=='gold_pro'"></field>
+                <field name="payment_type" optional="hide"></field>
+                <!-- <field name="operation_type"></field> -->
+                <field name="payment_type" optional="hide"></field>
+            </xpath>
+            <xpath expr="field[@name='activity_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                
+            </xpath>
+            <xpath expr="field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+
+            </xpath>      
+            <xpath expr="field[@name='partner_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+                
+            </xpath>                  
+        </field>
+    </record>
+
+    <record id="view_sale_order_search_inherit" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="instance_id"/>
+                <filter name="instance_filter" string="MercadoLibre Instance Active "
+                domain="[('instance_id', '=', context.get('default_instance_id', False))]"
+            />         
+            </xpath>
+        </field>
+    </record>
+</odoo>

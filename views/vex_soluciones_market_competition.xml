@@ -1,0 +1,43 @@
+<odoo>
+    <!-- Vista Tree -->
+    <record id="view_vex_market_competition_tree" model="ir.ui.view">
+        <field name="name">vex.market_competition.tree</field>
+        <field name="model">vex.market_competition</field>
+        <field name="arch" type="xml">
+            <tree string="Productos Más Vendidos">
+                <!-- <field name="name"/> -->
+                <field name="image_product" widget="image" options="{'size': [50, 50]}"/>
+                <field name="title"/>
+                <field name="mercado_id"/>
+                <field name="mercado_libre_url" widget="url"/>
+              
+                <field name="tipo"/>
+                <field name="price"/>
+                
+                <!-- <field name="tipo"/> -->
+                <field name="categoria"/>
+                <field name="site_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form
+    <record id="view_vex_market_competition_form" model="ir.ui.view">
+        <field name="name">vex.market_competition.form</field>
+        <field name="model">vex.market_competition</field>
+        <field name="arch" type="xml">
+            <form string="Detalle del Producto">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="mercado_id"/>
+                        <field name="posicion"/>
+                        <field name="tipo"/>
+                        <field name="categoria"/>
+                        <field name="site_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+</odoo>

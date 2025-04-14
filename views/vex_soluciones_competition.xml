@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_vex_soluciones_competition_tree" model="ir.ui.view">
+        <field name="name">vex.soluciones.competition.tree</field>
+        <field name="model">vex_soluciones.competition</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="item_id"/>
+                <field name="current_price"/>
+                <field name="price_to_win"/>
+                <field name="status"/>
+                <field name="visit_share"/>
+                <field name="competitors_sharing_first_place"/>
+                <field name="catalog_product_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="view_vex_soluciones_competition_form" model="ir.ui.view">
+        <field name="name">vex.soluciones.competition.form</field>
+        <field name="model">vex_soluciones.competition</field>
+        <field name="arch" type="xml">
+            <form string="Competition - Mercado Libre">
+                <sheet>
+                    <group>
+                        <field name="item_id"/>
+                        <field name="catalog_product_id"/>
+                    </group>
+                    <group>
+                        <field name="current_price"/>
+                        <field name="price_to_win"/>
+                    </group>
+                    <group>
+                        <field name="status"/>
+                        <field name="visit_share"/>
+                        <field name="competitors_sharing_first_place"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+</odoo>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vex_import_wizard" model="ir.ui.view">
+        <field name="name">vex.vex.import.wizard</field>
+        <field name="model">vex.import.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vex_actions" invisible = "vex_actions == 'excel_data'" />
+                            <field name="vex_instance_id"  domain="[('store_type', '=', 'mercadolibre')]" readonly="1"/>
+                            <field name="import_unit" invisible = "vex_actions == 'excel_data'"/>
+                            <field name="meli_code_unit" invisible = "import_unit == False" required="import_unit == True"/>
+                        </group>
+                        <group>
+                            <field name="stock_import"  invisible = "vex_actions != 'product' "/>
+                            <field name="import_images" invisible = "vex_actions != 'product'"/>
+                            <field name="import_images_website" invisible = "vex_actions != 'product'"/>
+                            <!-- <field name="import_excel_data" invisible = "vex_actions != 'excel_data'"/> -->
+                            <field name="date_from" invisible = "vex_actions not in ['customer','order']" required = "vex_actions in ['customer','order']"/>
+                            <field name="date_to" invisible = "vex_actions not in ['customer','order']" required = "vex_actions in ['customer','order']"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <div class="row w-100 d-flex justify-content-end mr-1">
+                        <div class="col-2 d-flex justify-content-end p-0">
+                            <button invisible = "vex_actions == 'excel_data'" type="object" name="synchronize" class="btn btn-primary ml-3"  context="{'store_type': 'mercadolibre'}" >SYNCHRONIZE</button>
+                            <button invisible = "vex_actions != 'excel_data'" string="Import Excel" type="object" name="action_open_import_wizard" class="btn-primary"/>
+                        </div>
+                    </div>  
+                </footer>                
+            </form>
+        </field>
+    </record>
+</odoo>

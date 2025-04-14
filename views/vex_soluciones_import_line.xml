@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vex_import_line_view_tree" model="ir.ui.view">
+        <field name="name">vex.import.line.view.tree</field>
+        <field name="model">vex.import_line</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="description" />
+                <field name="action" />
+                <field name="status" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

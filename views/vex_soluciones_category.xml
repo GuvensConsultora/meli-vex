@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_category_form_view_product" model="ir.ui.view">
+        <field name="name">product.category.view.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="meli_code"></field>
+                <field name="server_meli"></field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_category_search_inherit" model="ir.ui.view">
+        <field name="name">product.category.search.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="instance_id"/>
+                <filter name="instance_filter" string="MercadoLibre Instance Active "
+                domain="[('instance_id', '=', context.get('default_instance_id', False))]"
+            />         
+            </xpath>
+        </field>
+    </record>
+</odoo>

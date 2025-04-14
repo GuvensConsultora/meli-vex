@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="vex_sync_mercado_libre.forecast" owl="1">
+    <!-- GRAPH -->
+    
+        <div>
+            <t t-if="state.showModal">
+                <div class="modal d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content p-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Licencia vencida</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>No tienes una licencia activa de MercadoLibre.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" t-on-click="redirigirAConfiguracion">Ir a configuración</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+       <div class="container-fluid d-flex flex-column align-items-center position-relative" style="height: 100vh; max-width: 100%;">
+            <!-- Selector de productos en la parte superior -->
+            
+
+            <!-- Contenedor de gráficos centrado horizontalmente en una fila -->
+            <div class="row d-flex justify-content-center align-items-center w-100 mt-4">
+                <!-- Gráfico de productos sincronizados que ocupa toda la fila -->
+                <div class="col-12 mb-3">
+                    <div class="card h-100" style="min-height: 350px;">
+                        <div class="card-body">
+                            <h1 style="font-family: 'Arial', 'Helvetica', sans-serif; 
+                                    font-size: 24px; 
+                                    font-weight: 600; 
+                                    color: #666666;  /* Color gris más suave */
+                                    margin: 10px 0;  /* Un pequeño margen superior e inferior */
+                                    padding: 0;
+                                    text-align: center;">  <!-- Centrado -->
+                                Stock Forecast
+                            </h1>
+                        
+                            <!-- Buscador dentro del gráfico -->
+                            <div class="position-relative mb-3">
+                                <label for="productSearch" class="form-label fw-bold text-muted me-2" style="width: 100%;">Search Product:</label>
+                                <input 
+                                    type="text" 
+                                    id="productSearch" 
+                                    class="form-control form-control-sm" 
+                                    style="width: 100%;" 
+                                    t-on-input="onSearchInput" 
+                                    t-model="state.searchText"                                   
+                                    placeholder="Type to search..."
+                                    autocomplete="off"
+                                />
+                                <div class="autocomplete-list position-absolute w-100 bg-white border border-secondary rounded" t-if="state.filteredProducts.length" style="z-index: 1050;">
+                                    <select
+                                        class="form-select form-select-sm" 
+                                        t-model="state.selectedProduct" 
+                                        t-on-change="onProductChange"
+                                        size="5"
+                                    >
+                                        <option 
+                                            class="text-truncate py-2 px-3" 
+                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                            t-att-value="product.product_id" 
+                                            t-foreach="state.filteredProducts" 
+                                            t-as="product" 
+                                            t-key="product.product_id"
+                                        >
+                                            <t t-esc="product.product_name"/>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <!-- Fin del buscador -->
+                            <canvas style="max-height: 500px;" t-ref="productosSincronizadosChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos restantes que ocupan el 50% cada uno -->
+                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <div class="card h-100" style="min-height: 350px;">
+                        <div class="card-body">
+                            <canvas t-ref="line1"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <div class="card h-100" style="min-height: 350px;">
+                        <div class="card-body">
+                            <canvas t-ref="pie1"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aqui agregariamos la tabla hasta el final-->
+
+                <!-- Tabla que ocupa toda la fila debajo de los gráficos secundarios -->
+                <div class="col-12 mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 id="tableTitle" class="text-center" style="font-family: 'Arial', 'Helvetica', sans-serif; 
+                                    font-size: 24px; 
+                                    font-weight: 600; 
+                                    color: #666666;  
+                                    margin: 10px 0;">
+                                Top 20 Products Most Sold In The Last 70 days
+                            </h2>
+                            <div class="table-responsive" id="tableContainer">
+                                <table class="table table-hover" >
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">Product Name</th>
+                                            <th scope="col">Product Code</th>
+                                            <th scope="col">Quantity Sold Last 70 days</th>
+                                            <th scope="col">Current Stock</th>
+                                            <th scope="col">Minimum stock required for the next week</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Usando t-foreach para iterar sobre los productos -->
+                                        <tr t-foreach="products" t-as="product"  t-key="product.product_id">
+                                            <td t-esc="product.product_name"></td>
+                                            <td t-esc="product.default_code"></td>
+                                            <td t-esc="product.quantity_sold"></td>
+                                            <td t-esc="product.current_stock"></td>
+                                            <td t-esc="product.stock_necessary"></td> 
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <!-- Tabla añadida al final de todo -->
+        
+
+
+
+
+
+
+        <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+            <div class="o_dashboard_view my-5">
+              
+
+                
+                <div class="grid-stack">
+                    
+                </div>
+            </div>
+            
+        </div>
+
+        
+        <!-- <footer class="footer">
+            <div class="container text-center">
+                <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                    <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                </a>
+            </div>            
+        </footer> -->
+    </t>
+</templates>

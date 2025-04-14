@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="odoo-mercadolibre.MiComponenteOWL">
+       <div class="container" style="margin-left: 0; float: left;">
+            <t t-name="odoo_mercadolibre.MiComponenteOWL">
+                <button class="btn btn-secondary" t-on-click="goBack" style="margin-bottom: 15px;">
+                    Volver al listado
+                </button>
+            </t>
+            
+            <!-- <ul class="nav nav-tabs" id="myTabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1">Resumen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2">Ranking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab3-tab" data-bs-toggle="tab" href="#tab3">Detalles</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab1">
+                    <h3>Información General</h3>
+                    <p>Aquí puedes escribir el contenido de la pestaña de Resumen.</p>
+                </div>
+                <div class="tab-pane fade" id="tab2">
+                    <h3>Ranking de Productos</h3>
+                    <p>Esta pestaña muestra el ranking de publicaciones y vendedores.</p>
+                </div>
+                <div class="tab-pane fade" id="tab3">
+                    <h3>Detalles Específicos</h3>
+                    <p>Aquí puedes poner información más detallada sobre los registros.</p>
+                </div>
+            </div> -->
+
+            <div class="col-md-6">
+                <h3>Palabras más buscadas</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Palabras más buscadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="trendingKeywords">
+                            <t t-foreach="trendingKeywords" t-as="keyword" t-key="keyword.id">
+                                <tr>
+                                    <td><t t-esc="keyword.id"/></td>
+                                    <td><t t-esc="keyword.keyword"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="col-md-6">
+                <h3>Ranking de Publicaciones</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Publicaciones</th>
+                            <th>Precio Promedio</th>
+                            <th>Unidades Vendidas</th>
+                            <th>Facturación</th>
+                        </tr>
+                    </thead>
+                    <!-- <tbody>
+                        <t t-foreach="props.data1" t-as="record">
+                            <tr>
+                                <td><t t-esc="record.id"/></td>
+                                <td><t t-esc="record.name"/></td>
+                            </tr>
+                        </t>
+                    </tbody> -->
+                </table>
+            </div>
+            
+        </div>
+    </t>
+</templates>

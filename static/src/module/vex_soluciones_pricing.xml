@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="vex_sync_mercado_libre.pricing" owl="1">
+        <div>
+            <t t-if="state.showModal">
+                <div class="modal d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content p-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Licencia vencida</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>No tienes una licencia activa de MercadoLibre.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" t-on-click="redirigirAConfiguracion">Ir a configuración</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+        <div class="">
+            <!-- Content -->
+            <div class="content">
+                <t t-if="state.selectedMenuOption === 'dashboard'">
+                    <div class="p-4">
+                        <!-- Línea horizontal con título centrado y selector a la derecha -->
+                        <div class="flex items-center justify-between w-full" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="flex-1 text-center">
+                            </div>
+                            <!-- Título centrado ocupando todo el espacio -->
+                            <div class="flex-1 text-center">
+                                <h1 class="text-xl font-bold">Pricing Dashboard</h1>
+                            </div>
+
+                            <!-- Selector a la derecha -->
+                            <div class="flex items-center space-x-2">
+                                <label for="month" class="font-semibold text-sm">Period:</label>
+                                <input 
+                                    type="month" 
+                                    t-model="state.selectedMonth" 
+                                    readonly="1"
+                                    disabled="1"
+                                    class="border border-gray-300 rounded p-1"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="content-settings" style="margin-right: 20px; margin-left: 20px;">
+                        <div class="o_action_manager custom-whatsapp-suite" style="overflow: auto; max-width: 100%; margin-top: -70px;">
+                            <div class="o_dashboard_view my-5">
+                                <div class="d-flex justify-content-between gap-4 flex-wrap" style="row-gap: 10px; padding-top: 20px; margin-left: 20px; margin-right: 20px;">
+                        
+                                    <!-- Orders synced today -->
+                                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.price_score"></p>
+                                        <h6 class="mt-2" t-esc="'Price score (?)'"></h6>
+                                    </div>
+
+                                    <!-- Total orders -->
+                                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.increased_profit"></p>
+                                        <h6 class="mt-2" t-esc="'Increased Profit'"></h6>
+                                    </div>
+
+                                    <!-- New customers this month -->
+                                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.profit_margin + '%'"></p>
+                                        <h6 class="mt-2" t-esc="'Profit Margin'"></h6>
+                                    </div>
+
+                                    <!-- Elemento 4 -->
+                                    <div class="card p-3 text-center " style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.total_sales"></p>
+                                        <span>0.0% + since last month</span>
+                                        <h6 class="mt-2" t-on-click="total_orders_views" t-esc="'Total Sales'"></h6>
+                                    </div>
+
+                                    <!-- Elemento 5 -->
+                                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.products_count"></p>
+                                        <h6 class="mt-2" t-on-click="products_view" t-esc="'Products'"></h6>
+                                    </div>
+
+                                    <!-- Elemento 6 -->
+                                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                                        <p t-esc="state.competitors_count"></p>
+                                        <h6 class="mt-2" t-esc="'Total competitors'"></h6>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="container d-flex flex-column" style="max-width: 100%;">
+                            <div class="row flex-grow-1">
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="averagePriceChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="productosSincronizadosChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="line1"></canvas>
+                                    </div>
+                                </div>
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="pie1"></canvas>
+                                    </div>
+                                </div>
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="doughnut1"></canvas>
+                                    </div>
+                                </div>
+                                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                                        <canvas t-ref="radar1"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- bubble1,polarArea1,bar1 deleted -->
+                            </div>
+                        </div>
+
+                        
+                        <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+                            <div class="o_dashboard_view my-5">
+                                <!-- <div class="o_dashboard_header mb-4 text-center">
+                                    <h1 style="color:#71639e">Dashboard</h1>
+                                    <p>Sales</p>
+                                </div> -->
+                                <div class="container" style="max-width: none !important">
+                                    <div class="grid-stack-item-content p-3">
+                                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                                            <h5 class="mb-0">Price Optimization - Market Opportunity</h5>
+                                            <div>
+                                                <input type="text" class="form-control mr-2" id="searchInput" placeholder="Search for products..." style="width: 200px; display: inline-block;"/>
+                                                <select class="custom-select mx-1" id="statusFilter" style="width: 200px;">
+                                                    <option value="">All Status</option>
+                                                    <option value="More Competitive">More Competitive</option>
+                                                    <option value="Less Competitive">Less Competitive</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" style="width: 100%;"> 
+                                            <table class="table table-hover">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th scope="col">Product Name</th>
+                                                        <th scope="col">Current Price ($)</th>
+                                                        <th scope="col">Recommended Price ($)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="state.products_prices" t-as="row" t-key="row.product_name">
+                                                        <td t-esc="row.product_name"></td>
+                                                        <td t-esc="row.standard_price"></td>
+                                                        <td t-esc="row.avg_compared_price"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                
+                                <div class="grid-stack">
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <footer class="footer">
+                                <div class="container text-center">
+                                    <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                                        <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                                    </a>
+                                </div>
+                            </footer>
+                    </div>
+                </t>
+                
+                <div id="content-settings" style="margin-right: 20px; margin-left: 20px;">
+                    <t t-if="state.selectedMenuOption === 'pending'">
+                        
+                        <div class="p-2" style="display: grid;">                        
+                             <!-- Contenedor principal -->
+                            <div class="container d-flex flex-column justify-content-center align-items-center vh-100 text-center my-5">
+                                <!-- Encabezado -->
+                                <h1 class="mb-4 fw-bold">
+                                    Con la herramienta Precios automáticos,  si otros vendedores cambian el precio... ¡Tu también!
+                                </h1>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="p-3">
+                                            <i class="bi bi-mouse2-fill" style="font-size: 3rem; color: #17a2b8;"></i>
+                                            <p class="mt-3 fw-medium">1-Elegí alguna de tus publicaciones.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="p-3">
+                                            <i class="bi bi-file-earmark-text" style="font-size: 3rem; color: #17a2b8;"></i>
+                                            <p class="mt-3 fw-medium">2-Seleccioná publicaciones de otros vendedores.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="p-3">
+                                            <i class="bi bi-gear-fill" style="font-size: 3rem; color: #17a2b8;"></i>
+                                            <p class="mt-3 fw-medium">3-Configurá tu precio automático.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Botón -->
+                                <div>
+                                    <button class="btn btn-primary btn-lg" t-on-click.prevent="open_export_view">Crear precio automático</button>
+                                    
+                                </div>
+                            </div>
+                            
+                                                
+                            <!-- Right Sidebar -->
+                            <div 
+                                class="sidebar" 
+                                t-att-style="'box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); z-index: 99; position: fixed; width: 600px; height: 100%; background: rgba(255, 255, 255, 1); padding: 20px; right:' + (state.isRightSidebarVisible ? '0' : '-600px') + '; transition: right 0.3s; overflow-y: auto;'"
+                            >
+                                <div class="d-flex justify-content-between">
+                                    <h2 
+                                        class="h4 fw-bold text-dark mb-0" 
+                                        style="padding-bottom: 20px;">
+                                        Precios automaticos
+                                    </h2>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-close btn-sm hover:text-muted" 
+                                        t-on-click.prevent="()=>this.toggleSidebar('right')" 
+                                        aria-label="Cerrar">
+                                    </button>
+                                </div>
+
+                                <div>                                    
+                                    <!-- Recuadro con sombra -->
+                                    <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+                                        <div class="card-body">
+                                            <!-- Etiqueta principal -->
+                                            <label for="searchPublication" class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                ¿Cuál de tus publicaciones querés elegir?
+                                            </label>
+                                            <p class="text-muted mb-3" style="font-size: 0.7rem; font-weight: 600;">
+                                                Buscá por título, número o pegá un link de Mercado Libre.
+                                            </p>
+                                            <!-- Input con lupa -->
+                                            <div class="input-group">
+                                                <input 
+                                                    type="text" 
+                                                    id="searchPublication" 
+                                                    class="form-control" 
+                                                    placeholder="Buscar..." 
+                                                    aria-label="Buscar publicación" 
+                                                    style="font-size: 0.7rem;"
+                                                />
+                                                <span class="input-group-text" style="cursor: pointer; font-size: 0.65rem;">
+                                                    <!-- Lupa Icon Emoji -->
+                                                    🔍
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <!-- Recuadro con sombra -->
+                                    <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+                                        <div class="card-body">
+                                            <!-- Etiqueta principal -->
+                                            <label for="comparePublications" class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                ¿Contra qué publicaciones de otros vendedores querés definir el precio?
+                                            </label>
+                                            <p class="text-muted mb-3" style="font-size: 0.7rem; font-weight: 600;">
+                                                Podés elegir entre 1 y 20 publicaciones para compararte.
+                                            </p>
+                                            <!-- Input para el link -->
+                                            <div class="input-group">
+                                                <input 
+                                                    type="text" 
+                                                    id="comparePublications" 
+                                                    class="form-control" 
+                                                    placeholder="Link de Mercado Libre" 
+                                                    aria-label="Link de Mercado Libre" 
+                                                    style="font-size: 0.7rem;"
+                                                />
+                                                <!-- Botón Agregar -->
+                                                <button 
+                                                    class="btn btn-secondary" 
+                                                    type="button" 
+                                                    id="addLinkButton" 
+                                                    style="font-size: 0.65rem;"
+                                                >
+                                                    Agregar
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                    </div><div class="card shadow-sm p-3 mb-4 bg-white rounded" id="hiddenDivs">
+                                        <div class="card-body">
+                                            <!-- Etiqueta principal -->
+                                            <label for="comparePublications" class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                Configura tu Precio automatico
+                                            </label>
+                                            <!-- menu desplegable-->
+                                            <div class="input-group">
+                                                <select 
+                                                    id="comparePublications" 
+                                                    class="form-control" 
+                                                    style="font-size: 0.7rem;"  
+                                                    aria-label="Selecciona una o más opciones"
+                                                >
+                                                    <option value="opcion1">Contra la publicacion mas barata del grupo</option>
+                                                    <option value="opcion2">Contra la publicacion mas cara del grupo</option>
+                                                    <option value="opcion3">Contra el precio promedio del grupo</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Chequeo de % o valor específico -->
+                                            <div id="radio-options" style="margin-top: 1rem;">
+                                                <label style="display: block; margin-bottom: 0.5rem;">
+                                                    <input 
+                                                        type="radio" 
+                                                        name="usageOption" 
+                                                        value="porcentaje" 
+                                                        style="margin-right: 0.5rem; accent-color: blue; cursor: pointer;" 
+                                                        checked=""
+                                                        onclick="updatePlaceholder('porcentaje')"
+                                                    />
+                                                    Usar un porcentaje
+                                                </label>
+
+                                                <label style="display: block;">
+                                                    <input 
+                                                        type="radio" 
+                                                        name="usageOption" 
+                                                        value="valor" 
+                                                        style="margin-right: 0.5rem; accent-color: blue; cursor: pointer;" 
+                                                        onclick="updatePlaceholder('valor')"
+                                                    />
+                                                    Usar un valor específico
+                                                </label>
+                                            </div>
+
+                                            <!-- Inputs alineados -->
+                                            <div style="display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem;">
+                                                <input 
+                                                    type="text" 
+                                                    id="input1" 
+                                                    class="form-control" 
+                                                    placeholder="Porcentaje" 
+                                                    aria-label="Porcentaje" 
+                                                    style="font-size: 0.7rem; flex: 1; width: 48%;" 
+                                                />
+                                                <select 
+                                                    id="comparePublicationss" 
+                                                    class="form-control" 
+                                                    style="font-size: 0.7rem; width: 48%;"  
+                                                    aria-label="Selecciona una o más opciones"
+                                                >
+                                                    <option value="opcion1">Mas barato</option>
+                                                    <option value="opcion2">Mas Caro</option>
+                                                </select>
+                                            </div>
+
+
+                                            <script>
+                                                function updatePlaceholder(option) {
+                                                    const input1 = document.getElementById('input1');
+                                                    if (option === 'porcentaje') {
+                                                        input1.placeholder = 'Porcentaje';
+                                                    } else if (option === 'valor') {
+                                                        input1.placeholder = 'Valor en pesos';
+                                                    }
+                                                }
+
+                                            </script>
+                                            <div class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333; margin-top: 2rem;">
+
+                                                <label for="comparePublications" class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                    Precio Limite (opcional)
+                                                </label>
+                                                <p class="text-muted mb-3" style="font-size: 0.7rem; font-weight: 600;">
+                                                    Podes definir el valor minimo y/o maximo para que ajustesmos el 
+                                                    precio automatico.
+                                                </p>
+                                            </div>
+
+
+                                            <div style="display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem;">
+                                                <input 
+                                                    type="text" 
+                                                    id="inputmin" 
+                                                    class="form-control" 
+                                                    placeholder="Precio minimo" 
+                                                    aria-label="Precio minimo" 
+                                                    style="font-size: 0.7rem; flex: 1; width: 48%;" 
+                                                />
+                                                <input 
+                                                    type="text" 
+                                                    id="inputmax" 
+                                                    class="form-control" 
+                                                    placeholder="Precio maximo" 
+                                                    aria-label="Precio maximo" 
+                                                    style="font-size: 0.7rem; flex: 1; width: 48%;" 
+                                                />
+                                            </div>
+
+                                            <div class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333; margin-top: 2rem;">
+
+                                                <label for="comparePublications" class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                    Mientras la regla este activa, tu precio va a ser $199 mas barato que la publicacion mas barata del grupo que elegiste.
+                                                </label>
+                                                <p class="text-muted mb-3" style="font-size: 0.7rem; font-weight: 600;">
+                                                    Tu precio actual es $48.999 pasará a ser $48.999 
+                                                    <span style="font-size: 1.2rem; color:rgb(243, 18, 18); margin-left: 5px;">⚠</span>
+                                                </p>
+
+                                            </div>
+
+                                            <div id="continueCancelButtons" style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                                                <button 
+                                                    class="btn btn-primary" 
+                                                    id="cancelButton" 
+                                                    style="font-size: 0.75rem; background-color: white; color: #007bff; border: 1px solid #007bff;"
+                                                >
+                                                    Cancelar
+                                                </button>
+                                                <button 
+                                                    class="btn" 
+                                                    id="continueButton" 
+                                                    style="font-size: 0.75rem; background-color: #007bff; color: white; border: none;"
+
+                                                >
+                                                    Activar
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>                                                                 
+                                </div>
+
+                            </div>
+                        
+                        </div>
+                    </t>
+                    <t t-if="state.selectedMenuOption === 'history'">
+                        <div class="container mt-4">
+                            <!-- Título -->
+                            <div class="container">
+                                <!-- Título y párrafo -->
+                                <div class="mb-3">
+                                    <h4 class="mb-3">Precios automáticos</h4>
+                                    <p class="text-muted" style="font-size: 16px;">
+                                        Todos los días a las 8 y a las 20 horas vamos a actualizar los precios de acuerdo a las reglas que definiste.
+                                        Por el momento, podés configurar hasta 3 precios automáticos, ¡muy pronto vas a poder crear más!
+                                    </p>
+                                </div>
+
+                                <!-- Botón para crear precio automático -->
+                                <div class="d-flex justify-content-end mt-3" style="padding-bottom: 16px">
+                                    <button class="btn btn-primary" style="background-color: #007bff; color: #fff; padding: 8px 16px; border: none; border-radius: 10px; font-size: 12px">
+                                        Crear precio automático
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Tabla con contenido -->
+                            <table class="table table-bordered align-middle mb-0" style="border: 1px solid #dee2e6; text-align: center;">
+                                <thead style="background-color: #e6e6e6; border: 1px solid #dee2e6;">
+                                    <tr>
+                                        <th style="width: 40%; border: 2px solid #dee2e6; font-size: 18px;">Tu publicación</th>
+                                        <th style="width: 30%; border: 2px solid #dee2e6; font-size: 18px;">Regla</th>
+                                        <th style="width: 15%; border: 2px solid #dee2e6; font-size: 18px;">Precio</th>
+                                        <th style="width: 15%; border: 2px solid #dee2e6; font-size: 18px;">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!-- Imagen y texto -->
+                                        <td  style="border: 1px solid #dee2e6; text-align: left; padding: 10px;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                                </div>
+                                                <div>
+                                                    <strong style="font-size: 12px; display: block;">
+                                                        Muñeca Cry Babies Varios Modelos Bebe Llorón Original
+                                                    </strong>
+                                                    <a href="#" style="color: #0d6efd; text-decoration: none; font-size: 12px; display: block;">
+                                                        Publicación #1129573519
+                                                    </a>
+                                                </div>                                              
+                                            </div>
+                                        </td>
+
+                                        <!-- Regla -->
+                                        <td>
+                                            <span style="font-size: 12px;">
+                                                $199 más barato que <a href="#" style="color: #0d6efd; text-decoration: none; ">la publicación más barata</a>
+                                            </span>
+                                            <small style="color: #6c757d; display: block; font-size: 12px;">Mínimo $48.999 y máximo $51.999</small>
+                                        </td>
+
+                                        <!-- Precio -->
+                                        <td>
+                                            <strong style="font-size: 12px;">$48.999</strong>
+                                        </td>
+
+                                        <!-- Estado -->
+                                        <td>
+                                            <span style="color: #ffc107; font-size: 20px;">⚠</span>
+                                            <span style="color: green; font-weight: bold; font-size: 12px;">Activo</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Botón para crear precio automático -->
+                            <div class="text-end mt-3">
+                                <button class="btn" style="background-color: #007bff; color: #fff; padding: 8px 16px; border: none; border-radius: 10px; font-size: 12px">
+                                Crear precio automático
+                                </button>
+                            </div>
+                        </div>                        
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

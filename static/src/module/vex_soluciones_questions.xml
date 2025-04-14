@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="vex_sync_mercado_libre.questions" owl="1">
+        <div class="main-container" style="min-height: 93vh; display: flex; flex-direction: row;">
+
+      <!-- CONTACTOS -->
+            <div class="contactos" style="flex: 1; overflow: auto; padding: 10px; border-right: 1px solid #ddd; border-left: 5px solid #28a745;">
+        <!-- CARD -->
+                <div class="card-body h-100 d-flex flex-column">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-center mb-2">
+                            <h5 class="card-title">Contactos</h5>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <input type="text" class="form-control" placeholder="Buscar..." style="flex-grow: 1; margin-right: 8px;"/>
+                            <div class="dropdown">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="socialMediaDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Filtrar
+                                </button>
+                                <ul class="dropdown-menu p-2" aria-labelledby="socialMediaDropdown">
+                                    <li class="d-flex align-items-center justify-content-between my-1">
+                                        <a class="dropdown-item flex-grow-1" href="#" style="color: black;">Todos</a>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between my-1">
+                                        <i class="fab fa-instagram me-3" style="color: #E1306C;"></i>
+                                        <a class="dropdown-item flex-grow-1" href="#" style="color: black;">Instagram</a>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between my-1">
+                                        <i class="fab fa-facebook-f me-3" style="color: #3B5998;"></i>
+                                        <a class="dropdown-item flex-grow-1" href="#" style="color: black;">Facebook</a>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between my-1">
+                                        <i class="fab fa-whatsapp me-3" style="color: #25D366;"></i>
+                                        <a class="dropdown-item flex-grow-1" href="#" style="color: black;">WhatsApp</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="list-group list-contact p-2 flex-grow-1" style="max-height: 72vh;">
+                        <li class="p-1" t-foreach="state.segments" t-as="segment" t-key="segment.id">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative me-3">
+                                        <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + segment.id  " alt="Operator Image" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                        <span class="badge text-white position-absolute" t-att-style="'top: 0; right: 0; transform: translate(50%, -50%); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background: ' + (segment.socialMedia === 'Instagram' ? '#E1306C' : segment.socialMedia === 'Facebook' ? '#3B5998' : segment.socialMedia === 'WhatsApp' ? '#25D366' : '')">
+                                                        5
+                                        </span>
+                                        <span class="badge text-white position-absolute" style="bottom: 0; left: 0; transform: translate(-50%, 50%); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background-color: transparent;">
+                                            <i class="fab" t-att-class="{
+                                                            'fa-instagram': segment.socialMedia === 'Instagram',
+                                                            'fa-facebook-f': segment.socialMedia === 'Facebook',
+                                                            'fa-whatsapp': segment.socialMedia === 'WhatsApp'
+                                                        }" t-att-style="'color: ' + ((segment.socialMedia === 'Instagram') ? '#E1306C' : 
+                                                                                     (segment.socialMedia === 'Facebook') ? '#3B5998' : 
+                                                                                     (segment.socialMedia === 'WhatsApp') ? '#25D366' : '')"></i>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="ms-3">
+                                        <h6 t-esc="segment.name" class="mb-0"></h6>
+                                        <small class="text-muted">"Quisiera más información..."</small>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+      <!-- CHAT EN VIVO -->
+            <div class="chat-en-vivo" style="flex: 2; padding: 10px; border-right: 1px solid #ddd;">
+        <!-- CARD -->
+                <div class="card-body h-100 p-0 flex-grow-1 d-flex flex-column">
+                    <div class="d-flex justify-content-center my-2">
+                        <h5 class="card-title">Chat en Vivo</h5>
+                    </div>
+          <!-- Row para miembros asignados -->
+                    <div class="row align-items-center mb-3 px-3">                        <!--
+            Agregado px-3 para dar padding horizontal -->
+            <!-- Imágenes de miembros asignados con superposición estilo dominó y más espacio entre
+            ellas -->
+                        <div class="col list-contact" style="overflow-x: auto; white-space: nowrap; margin-left: 10px;">
+                            <div style="display: inline-block; margin-left: -10px">                                <!--
+                Ajuste de margen negativo para el efecto dominó -->
+                                <div class="overflow-hidden rounded-circle" style="width: 40px; height: 40px; border: 1px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); z-index: 3; position: relative;">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Miembro 1" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;" />
+                                </div>
+                            </div>
+                            <div style="display: inline-block; margin-left: -10px">                                <!--
+                Repetir el ajuste para cada imagen -->
+                                <div class="overflow-hidden rounded-circle" style="width: 40px; height: 40px; border: 1px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); z-index: 2; position: relative;">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '53'" alt="Miembro 2" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;" />
+                                </div>
+                            </div>
+                            <div style="display: inline-block; margin-left: -10px">                                <!--
+                Repetir el ajuste para cada imagen -->
+                                <div class="overflow-hidden rounded-circle" style="width: 40px; height: 40px; border: 1px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); z-index: 1; position: relative;">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '53'" alt="Miembro 2" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;" />
+                                </div>
+                            </div>
+                        </div>
+
+            <!-- Botón para asignar más miembros con estilo mejorado y alineado a la derecha -->
+                        <div class="col-auto">
+                            <button class="btn btn-primary d-flex align-items-center justify-content-center" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; padding: 0.375rem 0.75rem; transition: all 0.2s ease;">
+                                <i class="fas fa-plus-circle me-2"></i>                                <!--
+                Ícono de FontAwesome, asegúrate de tener FontAwesome incluido en tu proyecto -->
+                                <span>Asignar Miembros</span>
+                            </button>
+                        </div>
+                    </div>
+
+          <!-- SECTION MESSAGES -->
+                    <ul class="list-group list-contact list-group-flush chat-messages flex-grow-1" style="overflow-y: auto; max-height: 67vh;">
+            <!-- Mensaje de texto del receptor -->
+                        <li class="m-2">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                </div>
+                                <div class="ms-2 flex-grow-1">
+                                    <div class="bg-light rounded p-2">
+                                        <p class="mb-0">Hola, ¿cómo puedo ayudarte?</p>
+                                        <small class="text-muted">10:30 AM</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje de texto del emisor -->
+                        <li class="text-end m-2">
+                            <div class="d-flex flex-row-reverse align-items-start">
+                                <div class="flex-shrink-0">
+                  <!-- Si se desea agregar una imagen para el emisor, debe ir aquí -->
+                                </div>
+                                <div class="me-2 flex-grow-1">
+                                    <div class="bg-success text-white rounded p-2" style="display: inline-block; max-width: 80%;">
+                                        <p class="mb-0">Me gustaría saber más sobre sus servicios.</p>
+                                        <small class="text-muted">10:31 AM</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con imagen receptor -->
+                        <li class="m-2">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                </div>
+                                <div class="ms-2">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_1920&amp;id=' + '45'" alt="Received image" class="img-fluid rounded" style="max-width: 200px; cursor: pointer;" onclick="openImageModal('/path/to/image.jpg')"/>
+                                    <small class="text-muted d-block">10:32 AM</small>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con imagen emisor -->
+                        <li class="text-end m-2">
+                            <div class="d-flex flex-row-reverse align-items-start">
+                                <div class="me-2">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Sent image" class="img-fluid rounded" style="max-width: 200px; cursor: pointer;" onclick="openImageModal('/path/to/image.jpg')"/>
+                                    <small class="text-muted d-block">10:33 AM</small>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con audio receptor -->
+                        <li class="m-2">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                </div>
+                                <div class="ms-2">
+                                    <audio controls="true" style="max-width: 200px;">
+                                        <source t-att-src="'/whatsapp_suite/static/plugin/assets/sound/notification.mp3'" type="audio/mpeg"/>
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                    <small class="text-muted d-block">10:34 AM</small>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con audio emisor -->
+                        <li class="text-end m-2">
+                            <div class="d-flex flex-row-reverse align-items-start">
+                                <div class="me-2">
+                                    <audio controls="true" style="max-width: 200px;">
+                                        <source src="/path/to/audio.mp3" type="audio/mpeg"/>
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                    <small class="text-muted d-block">10:36 AM</small>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con archivo receptor  -->
+                        <li class="m-2">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '45'" alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" loading="lazy"/>
+                                </div>
+                                <div class="ms-2">
+                                    <audio controls="true" style="max-width: 200px;">
+                                        <source t-att-src="'/whatsapp_suite/static/plugin/assets/sound/notification.mp3'" type="audio/mpeg"/>
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                    <small class="text-muted d-block">10:34 AM</small>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="m-2">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 invisible-avatar" style="width: 45px; height: 45px;">
+                  <!-- Espacio invisible que simula el avatar para mantener la alineación -->
+                                </div>
+                                <div class="ms-2">
+                                    <a href="/path/to/document.pdf" class="d-inline-block p-2 bg-light rounded" download="true">
+                                        <i class="fas fa-file-alt me-2"></i> Documento.pdf
+                                    </a>
+                                    <small class="text-muted d-block">10:34 AM</small>
+                                </div>
+                            </div>
+                        </li>
+            <!-- Mensaje con archivo emisor  -->
+
+                        <li class="text-end m-2">
+                            <div class="d-flex flex-row-reverse align-items-start">
+                                <div class="me-2">
+                                    <a href="/path/to/document.pdf" class="d-inline-block p-2 bg-primary text-white rounded">
+                                        <i class="fas fa-file-alt me-2"></i> Documento.pdf
+                                    </a>
+                                    <small class="text-muted d-block">10:37 AM</small>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+
+
+
+                    <div class="input-group" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #f8f9fa; border-radius: 35px; overflow: hidden; padding: 5px;">
+                        <button class="btn" type="button" style="color: #007bff;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <input type="text" class="form-control" placeholder="Escribe un mensaje..." style="border: 0; box-shadow: none; border-radius: 25px;" />
+                        <button class="btn" type="button" style="color: #007bff;">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="btn" type="button" style="color: #007bff;">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="btn btn-primary" type="button" style="border-radius: 50%; box-shadow: none;">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+      <!-- CATÁLOGO -->
+      <!-- Contenedor principal de las pestañas -->
+      <!-- <div class="catalogo" style="flex: 1; overflow: auto; padding: 10px;">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="catalogo-tab" data-bs-toggle="tab" data-bs-target="#catalogo"
+      type="button" role="tab" aria-controls="catalogo" aria-selected="true">Catálogo</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="configuracion-tab" data-bs-toggle="tab"
+      data-bs-target="#configuracion" type="button" role="tab" aria-controls="configuracion"
+      aria-selected="false">Configuración</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="otro-tab" data-bs-toggle="tab" data-bs-target="#otro" type="button"
+      role="tab" aria-controls="otro" aria-selected="false">Otro</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="catalogo" role="tabpanel"
+      aria-labelledby="catalogo-tab">
+                        <div class="card-body h-100">
+                            <div class="d-flex justify-content-center my-2">
+                                <h5 class="card-title">Catálogo</h5>
+                            </div>
+                            <p>Explora nuestro catálogo de productos y servicios.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="configuracion" role="tabpanel" aria-labelledby="configuracion-tab">
+                        <div class="card-body h-100">
+                            <div class="d-flex justify-content-center my-2">
+                                <h5 class="card-title">Configuración</h5>
+                            </div>
+                            <p>Ajusta tus preferencias y configuraciones.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="otro" role="tabpanel" aria-labelledby="otro-tab">
+                        <div class="card-body h-100">
+                            <div class="d-flex justify-content-center my-2">
+                                <h5 class="card-title">Otro</h5>
+                            </div>
+                            <p>Información adicional o funcionalidades.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <div id="perfil" style="flex: 1; overflow: auto; padding: 10px;">
+                <div class="h-100 list-contact" style="max-height: 90vh;">
+                    <div class="card-body">
+            <!-- Sección Foto y Nombre del Perfil -->
+                        <div class="d-flex align-items-center mb-4">
+                            <img t-att-src="'/web/image?model=res.partner&amp;field=avatar_128&amp;id=' + '53'" alt="Foto de Perfil" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px;" />
+                            <h4>Nombre del Perfil</h4>
+                        </div>
+
+            <!-- Sección About con Información de Contacto -->
+                        <div id="about">
+                            <h5 class="card-title">About</h5>
+
+              <!-- Información de Contacto -->
+                            <div class="contact-info">
+                                <div class="info-item d-flex align-items-center my-2">
+                                    <i class="fas fa-phone-alt" style="color: #007bff; margin-right: 10px;"></i>
+                                    <span>+1 (555) 123-4567</span>
+                                </div>
+                                <div class="info-item d-flex align-items-center my-2">
+                                    <i class="fas fa-envelope" style="color: #dc3545; margin-right: 10px;"></i>
+                                    <span>email@example.com</span>
+                                </div>
+                                <div class="info-item d-flex align-items-center my-2">
+                                    <i class="fas fa-birthday-cake" style="color: #ffc107; margin-right: 10px;"></i>
+                                    <span>1st January 1990</span>
+                                </div>
+                                <div class="info-item d-flex align-items-center my-2">
+                                    <i class="fas fa-map-marker-alt" style="color: #28a745; margin-right: 10px;"></i>
+                                    <span>123 Main Street, Hometown</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+            <!-- Separador -->
+
+            <!-- Sección Label -->
+                        <div id="label" class="my-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title">Label</h5>
+                <!-- Botón para abrir modal -->
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLabelModal">Agregar Etiqueta</button>
+                            </div>
+
+              <!-- Modal para agregar etiqueta -->
+                            <div class="modal fade" id="addLabelModal" tabindex="-1" aria-labelledby="addLabelModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addLabelModalLabel">Nueva Etiqueta</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="text" class="form-control" placeholder="Nombre de la etiqueta" />
+                      <!-- Aquí puedes añadir opciones de color si lo deseas -->
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="button" class="btn btn-primary">Guardar Etiqueta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+              <!-- Etiquetas existentes -->
+                            <div class="tags">
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="importantTag" />
+                                    <label class="form-check-label d-flex align-items-center" for="importantTag" style="margin-left: 8px;">
+                                        <span class="badge bg-danger me-2 text-white">Importante</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="newCustomerTag" />
+                                    <label class="form-check-label d-flex align-items-center" for="newCustomerTag" style="margin-left: 8px;">
+                                        <span class="badge bg-success me-2 text-white">Nuevo Cliente</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="todaysDateTag" />
+                                    <label class="form-check-label d-flex align-items-center" for="todaysDateTag" style="margin-left: 8px;">
+                                        <span class="badge bg-info me-2 text-white">Fecha de Hoy</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" />
+                                    <label class="form-check-label d-flex align-items-center" for="todaysDateTag" style="margin-left: 8px;">
+                                        <span class="badge bg-info me-2 text-white">Fecha de Hoy</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" />
+                                    <label class="form-check-label d-flex align-items-center" for="todaysDateTag" style="margin-left: 8px;">
+                                        <span class="badge bg-info me-2 text-white">Fecha de Hoy</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" />
+                                    <label class="form-check-label d-flex align-items-center" for="todaysDateTag" style="margin-left: 8px;">
+                                        <span class="badge bg-info me-2 text-white">Fecha de Hoy</span>
+                                    </label>
+                                </div>
+                                <div class="form-check d-flex align-items-center mb-2">
+                                    <input class="form-check-input" type="checkbox" value="" />
+                                    <label class="form-check-label d-flex align-items-center" for="todaysDateTag" style="margin-left: 8px;">
+                                        <span class="badge bg-info me-2 text-white">Fecha de Hoy</span>
+                                    </label>
+                                </div>
+                <!-- Añadir más etiquetas según sea necesario -->
+                            </div>
+                        </div>
+
+                        <hr/>
+            <!-- Separador -->
+
+            <!-- Sección Activity -->
+                        <div id="activity">
+                            <h5 class="card-title">Activity</h5>
+                            <p>Registro de actividad reciente, eventos, etc.</p>
+                        </div>
+                        <hr />
+            <!-- Separador -->
+
+            <!-- Sección Note -->
+                        <div id="note">
+                            <h5 class="card-title">Note</h5>
+                            <p>Notas personales, recordatorios, etc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</template>

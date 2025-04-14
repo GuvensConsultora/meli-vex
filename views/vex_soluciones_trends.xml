@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_vex_soluciones_trends_tree" model="ir.ui.view">
+        <field name="name">vex.soluciones.trends.tree</field>
+        <field name="model">vex_soluciones.trends</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="popularity"/>
+                <field name="category"/>
+                <field name="trend_score"/>
+                <field name="created_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="view_vex_soluciones_trends_form" model="ir.ui.view">
+        <field name="name">vex.soluciones.trends.form</field>
+        <field name="model">vex_soluciones.trends</field>
+        <field name="arch" type="xml">
+            <form string="Trends">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category"/>
+                            <field name="created_date"/>
+                        </group>
+                        <group>
+                            <field name="popularity"/>
+                            <field name="trend_score"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+</odoo>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_only_form_view_product" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='detailed_type']" position="before">
+                <field name="instance_id" string="Mercado Libre Instance"/>
+            </xpath>
+            <xpath expr="//group[1]" position="inside">
+                <group invisible="1">
+                    <field name="store_type" />
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sales']" position="after">
+                <button name="action_export_product"
+                        string="Export Product"
+                        type="object"
+                        class="btn-secondary"/>
+            </xpath>
+            <xpath expr="//div[@name='options']" position="replace">
+                <div name="options">
+                    <span class="d-inline-block">
+                        <field name="sale_ok" on_change="1"/>
+                        <label for="sale_ok"/>
+                    </span>
+                    <span class="d-inline-block">
+                        <field name="purchase_ok"/>
+                        <label for="purchase_ok"/>
+                    </span>
+                    <span class="d-inline-block" invisible="store_type != 'mercadolibre'">
+                        <field name="export_to_meli"/>
+                        <label for="export_to_meli"/>
+                    </span>
+                    <span invisible="store_type != 'mercadolibre'">
+                        <field name="is_package" />
+                        <label for="is_package"/>
+                    </span>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='invoicing']" position="after">
+                <page name="price_history" string="Price History" invisible="store_type != 'mercadolibre'">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="date_from">Start Date</label>
+                            <field name="date_from" nolabel="1"/>
+                        </div>
+                        <div class="col-6">
+                            <label for="date_to">End Date</label>
+                            <field name="date_to" nolabel="1"/>
+                        </div>
+                    </div>
+                    <field name="evolution_data_ids" create="0">
+                        <tree>
+                            <field name="change_date"/>
+                            <field name="old_price"/>
+                            <field name="new_price"/>                           
+                        </tree>
+                    </field>
+                </page>           
+                <!-- <page name="competence_historyyy" string="Competence Price Historyyy" invisible="store_type != 'mercadolibre'">
+                    <field name="create_date" widget="date"/>
+                </page>     -->
+                <page name="competence_history" string="Competence Price History" invisible="store_type != 'mercadolibre'">                    
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="date_from">Start Date</label>
+                            <field name="date_from" nolabel="1"/>
+                        </div>
+                        <div class="col-6">
+                            <label for="date_to">End Date</label>
+                            <field name="date_to" nolabel="1"/>
+                        </div>
+                    </div>
+
+                    <field name="automatic_pricing_ids" create="0">
+                        <tree>
+                            <field name="competence_image" widget="image" string="Image"/> <!-- Imagen de la competencia -->
+                            <field name="name" string="Competitor Name"/> <!-- Nombre del competidor -->
+                            <field name="link" string="Competitor Link" widget="url"/> <!-- Enlace del competidor -->
+                            <field name="competence_actual_price" string="Price"/> <!-- Precio de la competencia -->
+                            <field name="write_date" string="Last Updated" widget="datetime"/> <!-- Última actualización -->
+                           
+                        </tree>
+                    </field>
+                </page>
+                <page name="publications" string="Publicaciones" invisible="store_type != 'mercadolibre'">
+                    <field name="group_ids" create="0">
+                        <tree>
+                            <field name="image" widget="image" string="Image"/>
+                            <field name='name'/>
+                            <field name="url" widget="url"/>
+                            <field name="num_publication" />
+                            <field name="price" />
+                            <field name="quantity" />
+                            <field name="meli_category_code" />
+                            <field name="action_export"/>
+                            <field name="export_to_meli" string="Export to MELI?" class="text-right" />                            
+                        </tree>
+                    </field>
+                </page>
+                <page name="meli_info" string="MELI INFO" invisible="store_type != 'mercadolibre'">
+                    <group >
+                        <field name='listing_type_id'/>
+                        <field name='condition'/>
+                        <field name='permalink' widget="url"/>
+                        <field name='thumbnail' widget="url"/>
+                        <field name='buying_mode'/>
+                        <field name='inventory_id'/>  
+                        <!-- SUPLEFIT_LOGIC--><field name="warehouse_location"  invisible="store_type != 'mercadolibre'"/>
+                    </group>
+                </page>
+
+                <page string="MELI Score">
+                    <field name="performance_score_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="sub_performance_score"  widget="handle"/>
+                            <field name="sub_performance_level" decoration-danger="sub_performance_score &lt; 60"
+                                       decoration-warning="sub_performance_score &lt; 90"
+                                       decoration-success="sub_performance_score &gt;= 90"/>
+                        </tree>
+                    </field>
+                </page>
+
+                <page name="unit_products" string="Productos Incluidos en el Paquete" invisible="is_package == False">
+                    <field name="product_unit_ids" nolabel="1" mode="tree,kanban">
+                        <tree editable="bottom">
+                                <control>
+                                    <create name="add_product_control" string="Add a product"/>
+                                </control>                        
+                            <field name="product_id"></field>
+                            <field name="permalink" widget="url" readonly="1"></field>
+                            <field name="quantity"></field>                                
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='product_tooltip']" position="after">
+                <field name="walmart_price" string="Walmart Price"/>
+                <field name="amazon_price" string="Amazon Price"/>
+                <field name="mercado_libre_price" string="Mercado Libre Price"/>
+                <field name="shopify_price" string="Shopify Price"/>
+                <field name="upc" string="UPC"/>
+                <field name="price_score" />
+                <!-- <field name="description"/> -->
+            </xpath>
+
+            <xpath expr="//field[@name='description']" position="after">
+                <group string = "Descripción del Producto">
+                    <field name="description_product" nolabel="1" placeholder="Escribe aquí..."
+                        widget="html" style="max-width: 4000%; width: 4000%; white-space: normal; overflow-wrap: break-word; white-space: normal; text-align: justify; word-wrap: break-word; overflow: hidden;"/>
+                </group >
+            </xpath>
+
+            <xpath expr="//field[@name='description_product']" position="after">
+                
+                <group string = "Optimiza la Descripción con Inteligencia Artificial" colspan="2">
+                    <field name="request_prompt" placeholder="Ejemplo: Optimiza la descripción y agrega más detalles" style="max-width: 4000%; width: 4000%; white-space: normal; overflow-wrap: break-word; white-space: normal; text-align: justify; word-wrap: break-word; overflow: hidden;"/>
+                    <field name="description_optimized"/>
+                    <!-- <field name="image_no_bg" widget="image" class="oe_avatar"/> -->
+                    <!-- <button name="remove_background_odoo" type="object" string="Quitar Fondo" class="oe_highlight"/> -->
+                    <!-- Añadimos un contenedor con alineación a la derecha -->
+                    <div style="text-align: right; width: 100%;">
+                        <button name="action_optimize_description"
+                                type="object"
+                                class="btn-primary"
+                                string="Optimizar"
+                                style="margin-left: auto; margin-right: 0;"/>
+                    </div>
+                </group >
+            </xpath>
+            <xpath expr="//field[@name='standard_price']" position="after">        
+                <field name="market_fee" string="MELI fee" invisible="store_type != 'mercadolibre'" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="after">        
+                <field name="ml_reference" string="MELI SKU"  invisible="store_type != 'mercadolibre'"/>
+                <field name="ml_publication_code" invisible="store_type != 'mercadolibre'"/>
+                <field name="meli_category_code" invisible="store_type != 'mercadolibre'" />
+                <field name="meli_status" invisible="store_type != 'mercadolibre'"/>
+                <field name="action_export" invisible="store_type != 'mercadolibre'"/>
+                <field name="attachment_id" invisible="store_type != 'mercadolibre'" /> 
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view_product" model="ir.ui.view">
+        <field name="name">product.template.view.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="ml_reference" string="ML SKU"/>
+                <field name="ml_publication_code" string="ML Publication"/>
+                <!-- <field name="warehouse_location" string="Bodega"/> -->
+                <field name="meli_category_code" string="ML Category"/>
+                <field name='listing_type_id' decoration-warning="listing_type_id=='gold_special'" decoration-success="listing_type_id=='gold_pro'"/>
+                <field name='condition'/>
+                <field name='buying_mode'/>
+                <!-- <field name='inventory_id'/>   -->             
+            </xpath>
+            <xpath expr="//field[@name='standard_price']" position="after">
+                <field name="market_fee" />
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='responsible_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>        
+            <!-- <xpath expr="//field[@name='standard_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>          -->
+            <xpath expr="//field[@name='virtual_available']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> 
+            <xpath expr="//field[@name='uom_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>           
+            <xpath expr="//field[@name='product_tag_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> 
+            
+            <xpath expr="//field[@name='product_tag_ids']" position="after">
+                <field name="performance_score" widget="handle" /> 
+                <field name="price_score"  /> 
+                <field name='performance_level' decoration-danger="performance_score &lt; 60"
+                                       decoration-warning="performance_score &lt; 90"
+                                       decoration-success="performance_score &gt;= 90"/>
+            </xpath>                                                  
+        </field>
+    </record>
+    <record id="view_stock_product_template_tree_stock" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_stock_product_template_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qty_available']" position="after">
+                <field name="meli_status" widget="badge" decoration-success="meli_status=='active'" decoration-warning="meli_status=='paused'" decoration-danger="meli_status=='closed'"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_template_units_view_form" model="ir.ui.view">
+        <field name="name">product_template_units.view.form</field>
+        <field name="model">product.template.units</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="product_id" />
+                        <field name="meli_code" />
+                        <field name="quantity" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_product_template_search_inherit" model="ir.ui.view">
+        <field name="name">product.template.search.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="instance_id"/>
+                <filter name="instance_filter" string="MercadoLibre Instance Active "
+                domain="[('instance_id', '=', context.get('default_instance_id', False))]"
+            />         
+            </xpath>
+        </field>
+    </record>
+</odoo>

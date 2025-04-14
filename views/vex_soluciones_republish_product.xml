@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_view_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_label_layout']" position="after">
+                <button name="exec_republish_items"
+                        string="Republish Item"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-refresh"
+                        invisible="meli_status not in ['closed']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="republish_items_ir_actions" model="ir.actions.server">
+        <field name="name">Republish</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="binding_model_id" ref="model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.exec_republish_items()
+        </field>
+    </record>
+
+    <!-- <record id="pricing_auto_masivo_ir_actions" model="ir.actions.server">
+        <field name="name">Generar precio automático</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="binding_model_id" ref="model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.generar_precio_automatico()
+        </field>
+    </record> -->
+
+    <record id="vex_instance_view_form_inherit" model="ir.ui.view">
+        <field name="name">vex.instance.view.form.inherit</field>
+        <field name="model">vex.instance</field>
+        <field name="inherit_id" ref="vex_sync_store.vex_instance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page id="republish_configuration_mercadolibre" name="republish_configuration_mercadolibre" string="Republish" invisible = "not (status == 'settings' and store_type == 'mercadolibre')">
+                    <div class="row">
+                        <div class="col-6">
+                            <group>
+                                <field name="auto_republish" string="Automatically republish items with closed status?"/>
+                            </group>
+                        </div>
+                        <div class="col-6">                  
+                            <group >
+                                <field name="default_quantity_republish" string="Default Quantity to Republish"/>
+                            </group>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

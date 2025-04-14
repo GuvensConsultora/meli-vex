@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="category_tree_view" model="ir.ui.view">
+        <field name="name">vex.category.tree</field>
+        <field name="model">vex.category</field>
+        <field name="arch" type="xml">
+            <tree string="Categorías">
+                <field name="description"/>
+                <field name="codigo_ml"/>
+                <field name="publications_count"/>
+                <field name="count_sellers"/>
+                <field name="participation"/>
+                <field name="units_sold"/>
+                <field name="billing"/>
+                <button name="action_open_owl" string="Ver Detalles" type="object" icon="fa-eye" context="{'category_id': id}"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="view_vex_category_form" model="ir.ui.view">
+        <field name="name">vex.category.form</field>
+        <field name="model">vex.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoría">
+                <sheet>
+                    <group>
+                        <field name="description"/>
+                        <field name="publications_count"/>
+                        <field name="count_sellers"/>
+                        <field name="participation"/>
+                        <field name="units_sold"/>
+                        <field name="billing"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+
+    <record id="vex_category_search_view" model="ir.ui.view">
+        <field name="name">vex.category.search</field>
+        <field name="model">vex.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="instance_id"/>
+                <filter name="instance_filter" string="Mercadolibre Instance Active"
+                    domain="[('instance_id', '=', context.get('default_instance_id', False))]"
+                />     
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,74 @@
+<odoo>
+    <record id="rule_sale_order_by_instance" model="ir.rule">
+        <field name="name">Orders filtered by active instance</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="domain_force">[
+         '|',
+         ('instance_id', '=', user.meli_instance_id.id),
+         ('create_uid', '!=', 2)]</field>
+        <!-- <field name="groups" eval="[(4, ref('base.group_user'))]"/> -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_res_partner_by_instance" model="ir.rule">
+        <field name="name">Partners filtered by active instance</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain_force">[
+         '|',
+         ('instance_id', '=', user.meli_instance_id.id),
+         ('create_uid', '!=', 2)]</field>
+        <!-- <field name="groups" eval="[(4, ref('base.group_user'))]"/> -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_product_template_by_instance" model="ir.rule">
+        <field name="name">Product Templates filtered by active instance</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[
+         '|',
+         ('instance_id', '=', user.meli_instance_id.id),
+         ('create_uid', '!=', 2)]</field>
+        <!-- <field name="groups" eval="[(4, ref('base.group_user'))]"/> -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_product_product_by_instance" model="ir.rule">
+        <field name="name">Product Variants filtered by active instance</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="domain_force">[
+         '|',
+         ('product_tmpl_id.instance_id', '=', user.meli_instance_id.id),
+         ('create_uid', '!=', 2)]</field>
+        <!-- <field name="groups" eval="[(4, ref('base.group_user'))]"/> -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_product_category_by_instance" model="ir.rule">
+        <field name="name">Product Categories filtered by active instance</field>
+        <field name="model_id" ref="product.model_product_category"/>
+        <field name="domain_force">[
+            ('instance_id', '=', user.meli_instance_id.id)]</field>
+        <!-- <field name="groups" eval="[(4, ref('base.group_user'))]"/> -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

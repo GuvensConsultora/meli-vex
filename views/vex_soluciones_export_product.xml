@@ -1,0 +1,126 @@
+<odoo>
+    <record id="view_form_vex_solutions_export_product" model="ir.ui.view">
+        <field name="name">vex.solutions.export.product.form</field>
+        <field name="model">vex.soluciones.export.product</field>
+        <field name="arch" type="xml">
+            <form string="Exportar Producto" create="false" edit="false" class="oe_form">
+                <sheet>
+                    <!-- Encabezado profesional -->
+                    <h3 style="text-align: center;">
+                        <field name="product_name" readonly="1" style="color:rgb(0, 0, 0); font-weight: bold;" />
+                    </h3>
+                    <!-- Variables de solo lectura -->
+                    <field name="category_predicted" invisible="1" />
+
+                    <!-- Información General -->
+                    <group string="Información General" col="2">
+                        <field name="export_to_mercado_libre" string="Mercado Libre" />
+                        <field name="export_to_amazon" string="Amazon" />
+                        <field name="export_to_shopify" string="Shopify" />
+                        <field name="export_to_walmart" string="Walmart" />
+                    </group>
+                    <!-- Pestañas -->
+                    <notebook>
+                         <!-- Pestaña Descripción del Producto -->
+                        <page string="General">
+                            <group string="Descripción" colspan="2" style="margin-top: 20px;">
+                                <field name="description" placeholder="Agregue una descripción detallada aquí..." style="height: 100px;" />
+                            </group>
+                        </page>
+                        <!-- Pestaña Opciones de Mercado Libre -->
+                        <page string="Opciones de Mercado Libre"  invisible="not export_to_mercado_libre">
+                            <group string="Configuración de Mercado Libre" col="2" style="margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                                <group>
+                                    <field name="instance_mercado_libre" string="Tienda de ML" />
+                                    <field name='mercado_libre_price' string ="Precio ML"/>                              
+                                </group>
+                                <group>
+                                    <field name="product_condition" string="Condición del Producto" />
+                                    <field name="stock" string="Stock Disponible" />
+                                    <field name="purchase_mode" string="Modo de Compra" />
+                                    <field name="publication_type" string="Tipo de Publicación" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Opciones de Amazon" invisible="not export_to_amazon">
+                            <group string="Configuración de Amazon" col="2" style="margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                                <group>
+                                    <field name="amazon_seller_sku" string="Seller SKU" />
+                                    <field name="amazon_product_type" string="Tipo de Producto" />
+                                    <field name="amazon_item_name" string="Nombre del Producto" />
+                                    <field name="amazon_brand" string="Marca" />
+                                    <field name="amazon_manufacturer" string="Fabricante" />
+                                </group>
+                                <group>
+                                    <field name="amazon_description" string="Descripción" />
+                                    <field name="amazon_bullet_points" string="Puntos Clave" />
+                                    <field name="amazon_standard_product_id_type" string="Tipo de Identificador del Producto" />
+                                    <field name="amazon_standard_product_id_value" string="Valor del Identificador del Producto" />
+                                </group>
+                                <group>
+                                    <field name="amazon_fulfillment_channel" string="Canal de Cumplimiento" />
+                                    <field name="amazon_fulfillment_quantity" string="Cantidad Disponible" />
+                                    <field name="amazon_condition_type" string="Condición del Producto" />
+                                    <field name="amazon_cost" string="Costo" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Opciones de Shopify" invisible="not export_to_shopify">
+                        <group string="Configuración de Shopify" col="2" style="margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                            <group>
+                                <field name="shopify_title" string="Título" />
+                                <field name="shopify_body_html" string="Descripción HTML" />
+                                <field name="shopify_vendor" string="Proveedor" />
+                                <field name="shopify_product_type" string="Tipo de Producto" />
+                                <field name="shopify_price" string="Precio" />
+                                <field name="shopify_status" string="Estado del Producto" />
+                            </group>
+                            <group>
+                                <field name="shopify_sku" string="SKU" />
+                                <field name="shopify_inventory_quantity" string="Cantidad en Inventario" />
+                                <field name="shopify_tags" string="Etiquetas" />
+                                <field name="shopify_images" string="URLs de Imágenes" />
+                                <field name="shopify_options" string="Opciones" />
+                            </group>
+                            <group>
+                                <field name="shopify_handle" string="Handle" />
+                                <field name="shopify_metafields" string="Metafields" />
+                                <field name="shopify_inventory_management" string="Gestión de Inventario" />
+                                <field name="shopify_compare_at_price" string="Precio de Comparación" />
+                                <field name="shopify_weight" string="Peso" />
+                                <field name="shopify_weight_unit" string="Unidad de Peso" />
+                                <field name="shopify_collections" string="Colecciones" />
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Opciones de Walmart" invisible="not export_to_walmart">
+                        <group string="Configuración de Walmart" col="2" style="margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                            <group>
+                                <field name="walmart_sku" string="Walmart SKU" />
+                                <field name="walmart_product_id" string="Walmart Product ID" />
+                                <field name="walmart_product_id_type" string="Tipo de Product ID" />
+                                <field name="walmart_short_description" string="Descripción Corta" />
+                                <field name="walmart_brand" string="Marca" />
+                                <field name="walmart_main_image_url" string="URL de Imagen Principal" />
+                                <field name="walmart_product_category" string="Categoría de Producto" />
+                            </group>
+                            <group>
+                                <field name="walmart_price" string="Precio" />
+                                <field name="walmart_price_currency" string="Moneda del Precio" />
+                                <field name="walmart_shipping_weight" string="Peso para Envío" />
+                                <field name="walmart_shipping_weight_unit" string="Unidad de Peso" />
+                            </group>
+                        </group>
+                    </page>
+                    </notebook>
+
+                    <!-- Botones de acción -->
+                    <footer style="text-align: center; margin-top: 20px;">
+                        <button string="Exportar" type="object" class="btn-primary" name="action_export" style="background-color: #4CAF50; color: white;" />
+                        <button string="Cancelar" type="object" class="btn-secondary" special="cancel" style="background-color: #f44336; color: white;" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

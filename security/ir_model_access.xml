@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <record id="model_access_vex_instance" model="ir.model.access">
+        <field name="name">model.access.vex.instance</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_instance"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record> -->
+    <record id="model_access_vex_meli_action" model="ir.model.access">
+        <field name="name">model.access.vex.meli_action</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_meli_action"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>    
+         
+    <record id="model_access_vex_import" model="ir.model.access">
+        <field name="name">model.access.vex.import.wizard</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_import_wizard"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>    
+
+    <!-- <record id="model_access_vex_instance_status_orders" model="ir.model.access">
+        <field name="name">model.access.vex.instance.status.orders</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_instance_status_orders"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record> -->
+
+    <record id="model_access_vex_restapi_list" model="ir.model.access">
+        <field name="name">model.access.vex.restapi.list</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_restapi_list"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_vex_meli_action" model="ir.model.access">
+        <field name="name">model.access.vex_meli_action</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_meli_action"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_vex_export_product_wizard" model="ir.model.access">
+        <field name="name">model.access.vex_export_product_wizard</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_export_product_wizard"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>    
+    <record id="model_access_vex_export_product_line_wizard" model="ir.model.access">
+        <field name="name">model.access.vex_export_product_line_wizard</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_export_product_line_wizard"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_vex_group_product" model="ir.model.access">
+        <field name="name">model.access.vex.group.product</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_group_product"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>    
+
+    <record id="model_acces_vex_price_evolution" model="ir.model.access">
+        <field name="name">model.access.vex.price.evolution</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_soluciones_price_evolution_data"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>  
+
+    <!-- Record para automatic pricing -->
+    <record id="model_access_vex_auto_pricing" model="ir.model.access">
+        <field name="name">model.access.vex.auto.pricing</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_automatic_pricing"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>  
+        
+    <record id="model_access_vex_meli_logs" model="ir.model.access">
+        <field name="name">model.access.vex.meli.logs</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_meli_logs"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- <record id="model_access_vex_import_line" model="ir.model.access">
+        <field name="name">model.access.vex.import.line</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_import_line"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record> -->
+
+    <record id="model_access_vex_sku" model="ir.model.access">
+        <field name="name">model.access.vex.sku</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_sku"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+    
+    <record id="model_access_product_template_units" model="ir.model.access">
+        <field name="name">model.access.product.template.units</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_product_template_units"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>    
+
+    <record id="access_vex_meli_questions_manager" model="ir.model.access">
+    <field name="name">vex.meli.questions manager</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_meli_questions"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="access_import_excel_wizard_manager" model="ir.model.access">
+    <field name="name">import.excel.wizard manager</field>
+    <field name="model_id" ref="model_import_excel_wizard"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="access_export_product" model="ir.model.access">
+    <field name="name">export.product manager</field>
+    <field name="model_id" ref="model_vex_soluciones_export_product"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="access_mediations_menu" model="ir.model.access">
+    <field name="name">import.mediation.menu</field>
+    <field name="model_id" ref="model_menu_mediation"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="vex_soluciones_mercadolibre_claim" model="ir.model.access">
+    <field name="name">mercadol.libre.claims</field>
+    <field name="model_id" ref="model_vex_soluciones_mercadolibre_claim"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="acces_dashboard_data" model="ir.model.access">
+    <field name="name">vex.dashboard.data</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_dashboard_data"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="acces_auto_answers" model="ir.model.access">
+    <field name="name">vex.auto.answers</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_auto_response"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="acces_auto_answers_user" model="ir.model.access">
+    <field name="name">vex.auto.answers user</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_auto_response"/>
+    <field name="group_id" ref="base.group_user"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_write" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<!-- Permiso de acceso para el grupo Público -->
+<record id="access_vex_auto_response_public" model="ir.model.access">
+    <field name="name">vex.auto.response public</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_auto_response"/>
+    <field name="group_id" ref="base.group_public"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_write" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+
+<record id="access_vex_gpt_config_admin" model="ir.model.access">
+    <field name="name">vex.gpt.config admin</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_gpt_config"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="access_vex_pricingml" model="ir.model.access">
+    <field name="name">vex.pricingml</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_mercado_libre_product"/>
+    <field name="group_id" ref="base.group_system"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="access_vex_gpt_config_user" model="ir.model.access">
+    <field name="name">vex.gpt.config user</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_gpt_config"/>
+    <field name="group_id" ref="base.group_user"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_write" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="access_vex_gpt_config_public" model="ir.model.access">
+    <field name="name">vex.gpt.config public</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_gpt_config"/>
+    <field name="group_id" ref="base.group_public"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_write" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="meli_gpt_log" model="ir.model.access">
+    <field name="name">vex.gpt.log user</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_prompt_history"/>
+    <field name="group_id" ref="base.group_user"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="competence_price_history" model="ir.model.access">
+    <field name="name">vex.competence.history</field>
+    <field name="model_id" ref="odoo-mercadolibre.model_vex_soluciones_competence_price_history"/>
+    <field name="group_id" ref="base.group_user"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="perm_read" eval="1"/>
+</record>
+
+<record id="mercado_libre_product_access" model="ir.model.access">
+    <field name="name">mercado.libre.product access</field>
+    <field name="model_id" ref="model_mercado_libre_product"/>
+    <field name="group_id" ref="base.group_user"/>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+</record>
+
+<record id="model_access_vex_meli_campaign_pads" model="ir.model.access">
+        <field name="name">model.access.vex.meli.campaign.pads</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_meli_campaign_pads"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>  
+
+    <record id="model_access_instance_selector_wizard" model="ir.model.access">
+        <field name="name">model.access.instance.selector.wizard</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_instance_selector_wizard"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>  
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_market_competition_user" model="ir.model.access">
+        <field name="name">access_vex_market_competition_user</field>
+        <field name="model_id" ref="model_vex_market_competition"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_category_user" model="ir.model.access">
+        <field name="name">access_vex_category_user</field>
+        <field name="model_id" ref="model_vex_category"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_soluciones_competition_user" model="ir.model.access">
+        <field name="name">access_vex_soluciones_competition_user</field>
+        <field name="model_id" ref="model_vex_soluciones_competition"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_soluciones_my_reputation_user" model="ir.model.access">
+        <field name="name">access_vex_soluciones_my_reputation_user</field>
+        <field name="model_id" ref="model_vex_soluciones_my_reputation"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_soluciones_product_performance_score" model="ir.model.access">
+        <field name="name">access_vex_soluciones_product_performance_score</field>
+        <field name="model_id" ref="model_product_performance_score"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+
+    <!-- <record id="access_product_category" model="ir.model.access">
+        <field name="name">product.category access</field>
+        <field name="model_id" ref="product.model_product_category"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_product_category_system" model="ir.model.access">
+        <field name="name">product.category access system</field>
+        <field name="model_id" ref="product.model_product_category"/>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record> -->
+    <!-- Permisos para mi modelo -->
+    <record id="access_vex_soluciones_category_trending_keyword" model="ir.model.access">
+        <field name="name">access_vex_soluciones_category_trending_keyword</field>
+        <field name="model_id" ref="model_vex_category_trending_keyword"/>
+        <field name="group_id" ref="base.group_user"/> 
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">1</field>
+    </record>
+    <record id="mercado_libre_product_compared_access" model="ir.model.access">
+        <field name="name">mercado.libre.product.compared access</field>
+        <field name="model_id" ref="model_mercado_libre_product_compared"/>
+        <!-- <field name="group_id" ref="base.group_user"/> -->
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+</odoo>

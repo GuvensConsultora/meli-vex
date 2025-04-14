@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_view_vex_instance" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">vex.instance</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+
+    <!-- <record id="action_vex_action_list" model="ir.actions.act_window">
+        <field name="name">Action List</field>
+        <field name="res_model">vex.meli.action</field>
+        <field name="view_mode">kanban,form</field>
+    </record> -->
+    
+    <!-- <record id="action_view_vex_import" model="ir.actions.act_window">
+        <field name="name">Import</field>
+        <field name="res_model">vex.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="vex_import_wizard"/>
+    </record> -->
+
+    <record id="action_view_vex_import_server" model="ir.actions.server">
+        <field name="name">Import</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_import_wizard"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Import',
+                    'res_model': 'vex.import.wizard',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {'default_vex_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False}
+                    }
+        </field>
+    </record>
+
+    <record id="action_view_vex_export" model="ir.actions.act_window">
+        <field name="name">Export data</field>
+        <field name="res_model">vex.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- <record id="action_view_vex_restapi_list" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">vex.restapi.list</field>
+        <field name="view_mode">kanban,form</field>
+    </record>  -->   
+    <record id="action_validate_licence" model="ir.actions.server">
+        <field name="name">Validate Licence</field>
+        <field name="model_id" ref="model_vex_restapi_list"/>
+        <field name="code">
+            model.validate_licence()
+        </field>
+    </record> 
+
+    <!-- <record id="view_product_template_tree_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record> -->
+
+    <record id="view_product_template_tree_action_server" model="ir.actions.server">
+        <field name="name">Products</field>
+        <field name="model_id" ref="product.model_product_template"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Products',
+                    'res_model': 'product.template',
+                    'view_mode': 'tree,form',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1, 'active_model': 'product.template'}}
+        </field>
+    </record>
+
+    <!-- <record id="view_product_category_tree_action" model="ir.actions.act_window">
+        <field name="name">Product Categories</field>
+        <field name="res_model">product.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record> -->
+
+    <record id="view_product_category_tree_action_server" model="ir.actions.server">
+        <field name="name">Product Categories</field>
+        <field name="model_id" ref="product.model_product_category"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Product Categories',
+                    'res_model': 'product.category',
+                    'view_mode': 'tree,form',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1, 'active_model': 'product.category'}}
+        </field>
+    </record>
+
+    <!-- <record id="view_res_partner_tree_action" model="ir.actions.act_window">
+        <field name="name">Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record> -->
+
+    <record id="view_res_partner_tree_action_server" model="ir.actions.server">
+        <field name="name">Partners</field>
+        <field name="model_id" ref="base.model_res_partner"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Partners',
+                    'res_model': 'res.partner',
+                    'view_mode': 'tree,form',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1}}
+        </field>
+    </record>
+
+    <!-- <record id="view_sale_order_tree_action" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record> -->
+
+    <record id="view_sale_order_tree_action_server" model="ir.actions.server">
+        <field name="name">Sales Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Sales Orders',
+                    'res_model': 'sale.order',
+                    'view_mode': 'tree,form',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1}}
+        </field>
+    </record>
+
+    <record id="view_product_pricelist_tree_action" model="ir.actions.act_window">
+        <field name="name">Pricelists</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record>
+    <record id="view_product_attribute_tree_action" model="ir.actions.act_window">
+        <field name="name">Attributes</field>
+        <field name="res_model">product.attribute</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record>
+
+    <!-- <record id="action_instance_settings" model="ir.actions.act_window">
+        <field name="name">Republish Settings</field>
+        <field name="res_model">vex.instance</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="odoo-mercadolibre.vex_instance_view_form"/>
+        <field name="domain">[("status", "=", "settings")]</field>
+        <field name="context">
+            {"default_status": "settings"}
+        </field>
+    </record> -->
+
+    <record id="action_instance_settings_server" model="ir.actions.server">
+        <field name="name">Abrir Mi Instancia</field>
+        <field name="model_id" ref="base.model_res_users"/> 
+        <field name="state">code</field>
+        <field name="code">action = env.user.action_open_meli_instance()</field>
+    </record>
+
+
+
+    <record id="action_instance_selector_wizard" model="ir.actions.act_window">
+        <field name="name">Select Instance</field>
+        <field name="res_model">instance.selector.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="questions" model="ir.actions.client" >
+        <field name="name"></field>
+        <field name="tag">vex_sync_mercado_libre.questions</field>
+    </record>
+
+    <record model="ir.actions.client" id="chatbot">
+        <field name="name"></field>
+        <field name="tag">vex_sync_mercado_libre.chatbot</field>
+    </record>
+
+    <record id="action_open_chatbot" model="ir.actions.client">
+    <field name="name">Questions</field>
+    <field name="tag">vex_sync_mercado_libre.chatbot</field>
+    </record>
+
+    <record id="action_open_pricing" model="ir.actions.client">
+    <field name="name">Pricing</field>
+    <field name="tag">vex_sync_mercado_libre.pricing</field>
+    </record>
+
+    <record id="action_open_pricing_list_rules" model="ir.actions.act_window">
+        <field name="name">Pricing Rules</field>
+        <field name="res_model">mercado.libre.product</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state_publi', '!=', False)]</field>
+        <field name="help"/>
+    </record>
+
+    <record id="action_open_pricing_add_rules" model="ir.actions.act_window">
+        <field name="name">Pricing Rule</field>
+        <field name="res_model">mercado.libre.product</field>
+        <field name="view_mode">form</field>
+        <field name="help"/>
+    </record>
+
+    <record id="action_open_pricing_massive_rules" model="ir.actions.act_window">
+        <field name="name">Massive Pricing Rules</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help"/>
+    </record>
+
+    <record id="action_open_forecast" model="ir.actions.client">
+    <field name="name">Forecast</field>
+    <field name="tag">vex_sync_mercado_libre.forecast</field>
+    </record>
+    
+    <record id="action_open_dashboard" model="ir.actions.client">
+    <field name="name">Dashboard</field>
+    <field name="tag">vex_sync_mercado_libre.welcome</field>
+    </record>
+
+    <record id="action_open_notices" model="ir.actions.client">
+    <field name="name">Notices</field>
+    <field name="tag">vex_sync_mercado_libre.notices</field>
+    </record>
+
+    <record id="action_open_mercado" model="ir.actions.client">
+    <field name="name">Mercado</field>
+    <field name="tag">vex_sync_mercado_libre.mercado</field>
+    </record>
+
+    <record id="action_view_vex_returned_orders" model="ir.actions.act_window">
+        <field name="name">Returned Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'group_by': ['instance_id',  'order_status']}</field>
+        <field name="domain">[('order_status', 'in', ['Canceled', 'No Pagada', 'Partially Refunded', 'Reimbursed']), ('store_type', '=', 'mercadolibre')]</field>
+        <field name="help"/>
+    </record>
+
+    <record id="action_product_ads" model="ir.actions.client">
+        <field name="name">Product ADS</field>
+        <field name="tag">vex_sync_mercado_libre.product_ads</field>
+    </record>
+
+    <record id="action_brand_ads" model="ir.actions.client">
+        <field name="name">Brand ADS</field>
+        <field name="tag">vex_sync_mercado_libre.brand_ads</field>
+    </record>
+
+    <record id="action_display_ads" model="ir.actions.client">
+        <field name="name">Display ADS</field>
+        <field name="tag">vex_sync_mercado_libre.display_ads</field>
+    </record>
+
+    <!-- <record id="action_product_pricing" model="ir.actions.act_window">
+        <field name="name">Reglas de Precios</field>
+        <field name="res_model">mercado.libre.product</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[("data_type", "=", "master")]</field>
+    </record>
+
+
+    <menuitem 
+        id="menu_product_pricing" 
+        name="Reglas de Precios" 
+        parent="odoo-mercadolibre.menu_vex_dashboard" 
+        action="action_product_pricing" 
+        sequence="4"/>  
+ -->
+    
+    <!-- Menús Main-->
+    <!-- <menuitem 
+        id="menu_main_odoo-mercadolibre"
+        name="MercadoLibre"
+        action="odoo-mercadolibre.action_view_vex_restapi_list" 
+        web_icon="odoo-mercadolibre,static/img/icon.png"
+        /> -->
+    <menuitem 
+        id="menu_main_odoo-mercadolibre"
+        name="Mercado Libre" 
+        action="action_open_dashboard" 
+        web_icon="odoo-mercadolibre,static/img/icon.png"
+        />
+    <menuitem 
+        id="menu_vex_dashboard"
+        name="Dashboard"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"       
+        sequence="1"
+    />           
+    
+    <menuitem 
+        id="menu_vex_synchronized_sale_order"
+        name="Orders"
+        action="view_sale_order_tree_action_server"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"        
+        sequence="2"
+        />
+
+    <menuitem 
+        id="menu_vex_synchronized_res_partner"
+        name="Clients"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"        
+        action="view_res_partner_tree_action_server"
+        sequence="3"
+        />
+
+
+    <menuitem 
+        id="menu_vex_synchronized_product_template"
+        name="Products"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        action="view_product_template_tree_action_server"
+        sequence="4"
+        />
+
+    <menuitem 
+        id="menu_vex_synchronized_product_category"
+        name="Categories"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        action="view_product_category_tree_action_server"
+        sequence="5"
+    /> 
+
+
+    <menuitem id="menu_open_chatbot"
+        name="Questions"
+        action="action_open_chatbot"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="6"
+    /> 
+
+    <menuitem 
+        id="menu_vex_action"
+        name="Action"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="7"/> 
+
+    <menuitem id="menu_open_mercado"
+        name="Market"
+        action="action_open_mercado"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="8"
+    /> 
+
+    <menuitem id="menu_open_pricing_main"
+        name="Pricing"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="9"
+    /> 
+
+    <menuitem id="menu_open_returned_orders"
+        name="Returned Orders"
+        action="action_view_vex_returned_orders"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="10"
+    /> 
+
+    <menuitem id="menu_vex_ads"
+        name="ADS"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="11"
+    /> 
+
+    <menuitem id="menu_vex_settings"
+        name="Settings"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        action="action_instance_settings_server"
+        sequence="12"
+    /> 
+    
+    <menuitem id="menu_instance_selector" 
+        name="Select Instance"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        action="action_instance_selector_wizard"
+        sequence="13"/>
+
+    <!-- <menuitem 
+        id="menu_vex_synchronized"
+        name="Synchronized"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="8"/> -->
+
+    <!-- <menuitem 
+        id="menu_vex_instance"
+        name="Settings"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        action="odoo-mercadolibre.action_view_vex_instance" 
+        sequence="9"/> -->
+
+    <menuitem id="menu_open_forecast"
+        name="Forecast"
+        action="action_open_forecast"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="2"
+    /> 
+
+
+    <!-- <menuitem id="menu_open_pricing"
+        name="Pricing"
+        action="action_open_pricing"
+        parent="odoo-mercadolibre.menu_main_odoo-mercadolibre"
+        sequence="3"
+    />  -->
+
+    <!-- <menuitem id="open_pricing_dash"
+        name="Dashboard"        
+        parent="odoo-mercadolibre.menu_open_pricing_main"
+        action="action_open_pricing"
+        sequence="10"
+        />  -->
+
+    <menuitem id="open_pricing_list_rules"
+        name="List Rules"        
+        parent="odoo-mercadolibre.menu_open_pricing_main"
+        action="action_open_pricing_list_rules"
+        sequence="20"
+        /> 
+    
+    <menuitem id="open_pricing_add_rule"
+        name="Add Rule"        
+        parent="odoo-mercadolibre.menu_open_pricing_main"
+        action="action_open_pricing_add_rules"
+        sequence="30"
+        /> 
+    
+    <!-- <menuitem id="open_pricing_massive_rules"
+        name="Add Masive Rules"        
+        parent="odoo-mercadolibre.menu_open_pricing_main"
+        action="action_open_pricing_massive_rules"
+        sequence="40"
+        />  -->
+
+    <!-- <menuitem 
+        id="menu_vex_synchronized_product_pricelist"
+        name="Pricelists"
+        parent="menu_vex_synchronized"
+        action="view_product_pricelist_tree_action"
+        sequence="5"
+        />
+
+    <menuitem 
+        id="menu_vex_synchronized_product_attribute"
+        name="Attributes"
+        parent="menu_vex_synchronized"
+        action="view_product_attribute_tree_action"
+        sequence="6"
+        /> -->
+
+    <!-- Vista vex_instance -->                                   
+    
+        <menuitem 
+        id="menu_vex_import_update"
+        name="Import Mercado Libre -> Odoo"
+        parent="odoo-mercadolibre.menu_vex_action"
+        action="odoo-mercadolibre.action_view_vex_import_server"
+        sequence="1"/> 
+
+        <menuitem 
+        id="menu_vex_export_update"
+        name="Export Odoo -> Mercado Libre"
+        parent="odoo-mercadolibre.menu_vex_action"
+        action="odoo-mercadolibre.action_view_vex_export"
+        sequence="2"/> 
+
+
+
+        <menuitem 
+        id="general_vex"
+        name="General"
+        parent="odoo-mercadolibre.menu_vex_dashboard"
+        action="action_open_dashboard"
+        sequence="1"/>    
+
+        <menuitem id="menu_open_forecast"
+        name="Forecast"        
+        parent="odoo-mercadolibre.menu_vex_dashboard"
+        action="action_open_forecast"
+        sequence="2"
+        /> 
+
+        <menuitem 
+        id="menu_open_pricing"
+        name="Pricing"
+        parent="odoo-mercadolibre.menu_vex_dashboard"
+        action="action_open_pricing"
+        sequence="3"/>  
+ 
+        <menuitem 
+        id="menu_open_notices"
+        name="Notices"
+        parent="odoo-mercadolibre.menu_vex_dashboard"
+        action="action_open_notices"
+        sequence="4"/>  
+          
+        <!-- <menuitem id="menu_open_dashboard"
+        name="Dashboard"
+        action="action_open_dashboard"
+        parent="menu_vex_synchronized"
+        /> -->
+
+        <menuitem id="menu_product_ads"
+        name="Product ADS"        
+        parent="odoo-mercadolibre.menu_vex_ads"
+        action="action_product_ads"
+        sequence="1"
+        /> 
+
+        <menuitem id="menu_brand_ads"
+        name="Brand ADS"        
+        parent="odoo-mercadolibre.menu_vex_ads"
+        action="action_brand_ads"
+        sequence="2"
+        /> 
+
+        <menuitem id="menu_display_ads"
+        name="Display ADS"        
+        parent="odoo-mercadolibre.menu_vex_ads"
+        action="action_display_ads"
+        sequence="3"
+        /> 
+        <!-- Accion de ventana -->
+    <record id="action_vex_market_competition" model="ir.actions.act_window">
+        <field name="name">Best Sellers</field>
+        <field name="res_model">vex.market_competition</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menú para 'Mercado Competencia' dentro de Inventario -->
+    <menuitem id="menu_inventory_vex_market_competition"
+              name="Best Sellers"
+              parent="odoo-mercadolibre.menu_open_mercado"   
+              action="action_vex_market_competition"/>
+
+    <!-- <record id="action_vex_category" model="ir.actions.act_window">
+        <field name="name">Category</field>
+        <field name="res_model">vex.category</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record> -->
+
+    <record id="action_vex_category_server" model="ir.actions.server">
+        <field name="name">Category</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_category"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'Category',
+                    'res_model': 'vex.category',
+                    'view_mode': 'tree',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1}}
+        </field>
+    </record>
+
+    <!-- Menú para 'Mercado Competencia' dentro de Inventario -->
+    <menuitem id="menu_inventory_category"
+              name="Category"
+              parent="odoo-mercadolibre.menu_open_mercado"   
+              action="action_vex_category_server"/>
+
+    <!-- <record id="action_vex_soluciones_competition" model="ir.actions.act_window">
+        <field name="name">Competition</field>
+        <field name="res_model">vex_soluciones.competition</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record>
+    
+    <menuitem id="menu_inventory_soluciones_competition"
+              name="Competition"
+              parent="odoo-mercadolibre.menu_open_mercado"   
+              action="action_vex_soluciones_competition"/> -->
+
+    <!-- <record id="action_vex_soluciones_my_reputation" model="ir.actions.act_window">
+        <field name="name">My Reputation</field>
+        <field name="res_model">vex_soluciones.my_reputation</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record> -->
+
+    <record id="action_vex_soluciones_my_reputation_server" model="ir.actions.server">
+        <field name="name">My Reputation</field>
+        <field name="model_id" ref="odoo-mercadolibre.model_vex_soluciones_my_reputation"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = {'type': 'ir.actions.act_window',
+                    'name': 'My Reputation',
+                    'res_model': 'vex_soluciones.my_reputation',
+                    'view_mode': 'tree',
+                    'context': {'default_instance_id': env.user.meli_instance_id.id if env.user.meli_instance_id else False,
+                    'search_default_instance_filter': 1}}
+        </field>
+    </record>
+
+    <!-- Menú para 'Mercado Competencia' dentro de Inventario -->
+    <menuitem id="menu_inventory_soluciones_my_reputation"
+              name="My Reputation"
+              parent="odoo-mercadolibre.menu_open_mercado"   
+              action="action_vex_soluciones_my_reputation_server"/>
+
+              
+</odoo>

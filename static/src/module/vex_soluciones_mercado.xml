@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="vex_sync_mercado_libre.mercado" owl="1">
+    <!-- GRAPH -->
+        <div class="o_action_manager custom-whatsapp-suite" style="overflow: auto; max-width: 100%;">
+            <div class="o_dashboard_view my-5">
+                <div class="d-flex justify-content-between gap-4 flex-wrap" style="row-gap: 10px; padding-top: 20px; margin-left: 20px; margin-right: 20px;">
+        
+                    <!-- Orders synced today -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.orders_number"></p>
+                        <h6 class="mt-2" t-esc="'Price score'"></h6>
+                    </div>
+
+                    <!-- Total orders -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.total_orders"></p>
+                        <h6 class="mt-2" t-esc="'Increased Profit'"></h6>
+                    </div>
+
+                    <!-- New customers this month -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.new_customers_last_month + '%'"></p>
+                        <h6 class="mt-2" t-esc="'Profit Margin'"></h6>
+                    </div>
+
+                    <!-- Elemento 4 -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.total_customers_count"></p>
+                        <h6 class="mt-2" t-on-click="customers_view" t-esc="'Total Sales'"></h6>
+                    </div>
+
+                    <!-- Elemento 5 -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.products_count"></p>
+                        <h6 class="mt-2" t-on-click="products_view" t-esc="'Products'"></h6>
+                    </div>
+
+                    <!-- Elemento 6 -->
+                    <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
+                        <p t-esc="state.questions_count"></p>
+                        <h6 class="mt-2" t-on-click="questions_view" t-esc="'Total competitors'"></h6>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container d-flex flex-column" style="max-width: 100%;">
+            <div class="row flex-grow-1">
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="categoriasProductosChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="productosSincronizadosChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="line1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="pie1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="doughnut1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="radar1"></canvas>
+                    </div>
+                </div>
+                
+                <!-- bubble1,polarArea1,bar1 deleted -->
+            </div>
+        </div>
+
+        
+        <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+            <div class="o_dashboard_view my-5">
+                <!-- <div class="o_dashboard_header mb-4 text-center">
+                    <h1 style="color:#71639e">Dashboard</h1>
+                    <p>Sales</p>
+                </div> -->
+                <div class="container" style="max-width: none !important">
+                    <div class="grid-stack-item-content p-3">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Price Optimization - Market Opportunity</h5>
+                            <div>
+                                <input type="text" class="form-control mr-2" id="searchInput" placeholder="Search for products..." style="width: 200px; display: inline-block;"/>
+                                <select class="custom-select mx-1" id="statusFilter" style="width: 200px;">
+                                    <option value="">All Status</option>
+                                    <option value="More Competitive">More Competitive</option>
+                                    <option value="Less Competitive">Less Competitive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive" style="width: 100%;"> 
+                            <table class="table table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Current Price ($)</th>
+                                        <th scope="col">Recommended Price ($)</th>
+                                        <th scope="col">Improvement Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Femflora Probioticos Enzimas Mujer Vaginal Capsulas</td>
+                                        <td>$372.00</td>
+                                        <td>$312.27</td>
+                                        <td>88</td>
+                                    </tr>
+                                    <tr>
+                                        <td>L-Teanina Cápsulas Vegetarianas X 120 Unidades</td>
+                                        <td>$428.00</td>
+                                        <td>$346.54</td>
+                                        <td>61</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multivitaminico Organico 120 Gomitas Garden Mujer</td>
+                                        <td>$800.00</td>
+                                        <td>$654.22</td>
+                                        <td>64</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Muscletech Proteína Nitrotech Performance Series 10lb</td>
+                                        <td>$2,099.00</td>
+                                        <td>$1,706.00</td>
+                                        <td>64</td>
+                                    </tr>
+                                    <tr>
+                                        <td>100 Billones Probióticos Orgánicos Cfu Enzimas Digestivas</td>
+                                        <td>$1,023.00</td>
+                                        <td>$856.83</td>
+                                        <td>58</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18 Enzimas Digestivas Digestión Probióticos</td>
+                                        <td>$934.00</td>
+                                        <td>$787.43</td>
+                                        <td>72</td>
+                                    </tr>
+                                    <tr>
+                                        <td>21 St Century Ácido Alfa Lipóico Antioxidante 50 Mg</td>
+                                        <td>$324.00</td>
+                                        <td>$267.89</td>
+                                        <td>79</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2x Pack Total Restore 90 Cápsulas Dr Gundry</td>
+                                        <td>$2,862.00</td>
+                                        <td>$2,394.57</td>
+                                        <td>85</td>
+                                    </tr>
+                                    <tr>
+                                        <td>300 Cápsulas Biotina Colágeno Uñas + Piel + Cabello</td>
+                                        <td>$788.00</td>
+                                        <td>$669.54</td>
+                                        <td>90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5 HTP Máxima Potencia 200mg 180 Cápsulas</td>
+                                        <td>$616.00</td>
+                                        <td>$523.60</td>
+                                        <td>76</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                <div class="grid-stack">
+                    
+                </div>
+            </div>
+            
+        </div>
+        <footer class="footer">
+                <div class="container text-center">
+                    <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                        <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                    </a>
+                </div>
+            </footer>
+    </t>
+</templates>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="vex_sync_mercado_libre.brand_ads" owl="1">
+        <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+        <t t-if="state.currentView == 'table'">
+        <!-- GRAPH -->
+             <div class="container column d-flex" style="margin: 0px;max-width: -webkit-fill-available;">
+                <div class="col-6" style="justify-self: flex-start; display: flex; margin:3px">
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricCamp == 'clicks', 'btn-outline-primary': state.activeMetricCamp != 'clicks'}" style="margin-inline: 10px;" t-on-click="() => changeMetricCamp('clicks')">Clics</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricCamp == 'units_quantity', 'btn-outline-primary': state.activeMetricCamp != 'units_quantity'}" style="margin-inline: 10px;" t-on-click="() => changeMetricCamp('units_quantity')">Sales</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricCamp == 'units_amount', 'btn-outline-primary': state.activeMetricCamp != 'units_amount'}" style="margin-inline: 10px;" t-on-click="() => changeMetricCamp('units_amount')">Income</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricCamp == 'consumed_budget', 'btn-outline-primary': state.activeMetricCamp != 'consumed_budget'}" style="margin-inline: 10px;" t-on-click="() => changeMetricCamp('consumed_budget')">Costs</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricCamp == 'acos', 'btn-outline-primary': state.activeMetricCamp != 'acos'}" style="margin-inline: 10px;" t-on-click="() => changeMetricCamp('acos')">ACOS</button>
+                </div>
+                <div class="col-6" style="display: flex;padding: 0px;justify-content: flex-end;">
+                    <select class="custom-select mx-1" t-on-change="handleFilterChangeCamp" t-model="state.filterTypeDateCamp" id="dateFilterCamp" style="width: 150px;">
+                        <option value="7">Last 7 days</option>
+                        <option value="15">Last 15 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container d-flex flex-column" style="max-width: 100%;">
+                <div class="row flex-grow-1">
+                    <div class="grid-stack-item col-lg-12 col-md-12 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                        <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                            <canvas t-ref="chartCampaign"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+                <style>
+                    .info-icon {
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        line-height: 20px;
+                        text-align: center;
+                        border-radius: 50%;
+                        background-color:rgb(2, 7, 12);
+                        color: white;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        margin-left: 5px;
+                    }
+
+                    .tooltip-container {
+                        position: relative;
+                        cursor: pointer;
+                    }
+
+                    .tooltip-custom {
+                        position: absolute;
+                        background-color: rgb(255, 255, 255); 
+                        color: black;
+                        text-align: center;
+                        padding: 8px;
+                        border-radius: 5px;
+                        border: 1px solid black;
+                        font-size: 12px;
+                        width: 150px;
+                        bottom: -115%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: opacity 0.3s ease-in-out;
+                    }
+
+                    .tooltip-container:hover .tooltip-custom {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                </style>
+                <div class="o_dashboard_view my-5">
+                    <div class="container" style="max-width: none !important">
+                        <div class="grid-stack-item-content p-3" >
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0" style="margin: 0px 10px;">Campaigns</h5>
+                                <div>
+                                    <input type="text" placeholder="Search by name or type..." t-on-input="ev => updateFilterCampaign(ev, 'search')" class="form-control mr-2" id="searchInput" style="width: 200px; display: inline-block;"/>
+                                    <select class="custom-select mx-1" t-on-change="ev => updateFilterCampaign(ev, 'status')" id="statusFilter" style="width: 150px;">
+                                        <option value="">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="paused">Paused</option>
+                                        <option value="disabled">Disabled</option>
+                                    </select>
+                                    <button class="btn btn-primary" id="export_excel" style="margin-bottom: 1%;" t-on-click="exportToExcelCampaigns">
+                                        Export to Excel
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="width: 100%;"> 
+                                <table class="table table-hover" id="table-campaigns">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" t-esc="'Campaign'" >Campaign</th>
+                                        <th scope="col" t-esc="'Status'" >Status</th>
+                                        <th scope="col" t-esc="'Type'" >Type</th>
+                                        <th scope="col" t-esc="'Start/End'" >Start/End</th>
+                                        <th scope="col" t-esc="'Budget'" >Budget</th>
+                                        <th scope="col" t-esc="'Sales'" >Sales</th>
+                                        <th scope="col" 
+                                            title="Cuando un usuario hace clic en tu anuncio, se contabiliza aquí.">
+                                            Clics
+                                            <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                        <th scope="col" 
+                                            title="Suma del valor de las ventas obtenidas de tu Product Ad.">
+                                            Income
+                                            <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                        <th scope="col" 
+                                            title="El coste corresponde a la suma de los gastos durante este periodo.">
+                                            Cost
+                                            <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                        <th scope="col" 
+                                            title="Porcentaje de inversión en publicidad sobre los ingresos obtenidos.">
+                                            ACOS
+                                            <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="paginatedCampaigns" t-as="row" t-key="row.name" t-att-data-id="row.id" t-on-click="openRecord">
+                                            <td t-esc="row.name"></td>
+                                            <td t-esc="row.status"></td>
+                                            <td t-esc="row.type"></td>
+                                            <td ><span t-esc="row.start_date"></span>/<span t-esc="row.end_date"></span></td>
+                                            <td t-esc="row.budget"></td>
+                                            <td t-esc="row.units_quantity"></td>
+                                            <td t-esc="row.clicks"></td>
+                                            <td t-esc="row.units_amount"></td>
+                                            <td t-esc="row.consumed_budget"></td>
+                                            <td t-esc="row.acos">%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pagination-controls">
+                                    <button class="btn btn-primary" id="prevPageCampaigns" t-on-click="prevPageCampaigns" t-att-disabled="state.currentPage_campaigns === 1">⏮ Previous </button>
+                                    <span id="pageNumberCampaigns" style="margin: 10px;"><t t-esc="state.currentPage_campaigns"/> / <t t-esc="totalPagesCampaigns"/></span>
+                                    <button class="btn btn-primary" id="nextPageCampaigns" t-on-click="nextPageCampaigns" t-att-disabled="state.currentPage_campaigns === totalPagesCampaigns"> Next ⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="grid-stack">
+                        
+                    </div>
+                </div>
+                
+            </div>
+            <footer class="footer">
+                    <div class="container text-center">
+                        <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                            <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                        </a>
+                    </div>
+                </footer>
+        </t>
+            <!-- <button class="btn btn-primary" t-on-click="test" >test</button> -->
+
+        <t t-if="state.currentView == 'detail'">
+            <div class="container column d-flex" style="margin: 0px;max-width: -webkit-fill-available;">
+                <div class="col-6" style="justify-self: flex-start; display: flex; margin:3px">
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'clics', 'btn-outline-primary': state.activeMetricDetail != 'clicks'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('clics')">Clics</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'prints', 'btn-outline-primary': state.activeMetricDetail != 'prints'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('prints')">Prints</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'cpc', 'btn-outline-primary': state.activeMetricDetail != 'cpc'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('cpc')">CPC</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'units_amount', 'btn-outline-primary': state.activeMetricDetail != 'units_amount'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('units_amount')">Income</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'units_quantity', 'btn-outline-primary': state.activeMetricDetail != 'units_quantity'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('units_quantity')">Income</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'consumed_budget', 'btn-outline-primary': state.activeMetricDetail != 'consumed_budget'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('consumed_budget')">Investment</button>
+                    <button class="btn" t-att-class="{'btn-primary': state.activeMetricDetail == 'acos', 'btn-outline-primary': state.activeMetricDetail != 'acos'}" style="margin-inline: 10px;" t-on-click="() => changeMetricDetail('acos')">ACOS</button>
+                </div>
+                <div class="col-6" style="display: flex;padding: 0px;justify-content: flex-end;">
+                    <select class="custom-select mx-1" t-on-change="handleFilterChangeKey" t-model="state.filterTypeDateKeyw" id="dateFilterKeyw" style="width: 150px;">
+                        <option value="7">Last 7 days</option>
+                        <option value="15">Last 15 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="container d-flex flex-column" style="max-width: 100%;">
+                <div class="row flex-grow-1">
+                    <div class="grid-stack-item col-lg-12 col-md-12 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                        <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                            <canvas t-ref="chartDetail"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+                <style>
+                    .info-icon {
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        line-height: 20px;
+                        text-align: center;
+                        border-radius: 50%;
+                        background-color:rgb(2, 7, 12);
+                        color: white;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        margin-left: 5px;
+                    }
+
+                    
+                    .tooltip-container {
+                        position: relative;
+                        cursor: pointer;
+                    }
+
+                    .tooltip-custom {
+                        position: absolute;
+                        background-color: rgb(255, 255, 255); 
+                        color: black;
+                        text-align: center;
+                        padding: 8px;
+                        border-radius: 5px;
+                        border: 1px solid black;
+                        font-size: 12px;
+                        width: 150px;
+                        bottom: -115%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: opacity 0.3s ease-in-out;
+                    }
+
+                    .tooltip-container:hover .tooltip-custom {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                </style>
+                <div class="o_dashboard_view my-1">
+                    <button class="btn btn-secondary mb-2" t-on-click="() => goBack()" style="margin-left: 1%;"> Go Back</button>
+                    <div class="container" style="max-width: none !important">
+                        <div class="grid-stack-item-content p-3" >
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0" style="margin: 0px 10px;">Keywords</h5>
+                                <div>
+                                    <input type="text" placeholder="Search by keyword..." t-on-input="ev => updateFilterKeyword(ev, 'search')" class="form-control mr-2" id="searchInput" style="width: 200px; display: inline-block;"/>
+                                    <button class="btn btn-primary" id="export_excel" style="margin-bottom: 1%;" t-on-click="exportToExcelKeywords">
+                                        Export to Excel
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="width: 100%;"> 
+                                <table class="table table-hover" id="table-keywords">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col" t-esc="'Keyword'">Keyword</th>
+                                            <th scope="col" t-esc="'CPC Max'" >CPC Max</th>
+                                            <th scope="col" t-esc="'CPC'" >CPC</th>
+                                            <th scope="col" 
+                                                title="Se contabiliza una impresión cada vez en las que se muestra el anuncio. Las impresiones ayudan a determinar con qué frecuencia se ve el anuncio.">
+                                                Prints 
+                                                <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                            <!-- <th scope="col" t-esc="'Printing Percentage'" >Printing Percentage</th> -->
+                                            <th scope="col" 
+                                                title="Cuando un usuario hace clic en tu anuncio, se contabiliza aquí.">
+                                                Clics
+                                                <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                            <th scope="col" t-esc="'Sales'" >Sales</th>
+                                            <th scope="col" t-esc="'CVR'" >CVR</th>
+                                            <th scope="col" 
+                                                title="Suma del valor de las ventas obtenidas de tu Product Ad.">
+                                                Income
+                                                <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                            <th scope="col" t-esc="'CTR'" >CTR</th>
+                                            <th scope="col" t-esc="'Investment'" >Investment</th>
+                                            <th scope="col" 
+                                                title="Porcentaje de inversión en publicidad sobre los ingresos obtenidos.">
+                                                ACOS
+                                                <span class="info-icon" data-bs-toggle="tooltip">?</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="paginatedKeywords" t-as="row" t-key="row.term">
+                                            <td t-esc="row.term"></td>
+                                            <td t-esc="row.cpc_max"></td>
+                                            <td t-esc="row.cpc"></td>
+                                            <td t-esc="row.prints"></td>
+                                            <!-- <td >100%</td> -->
+                                            <td t-esc="row.clics"></td>
+                                            <td t-esc="row.units_quantity"></td>
+                                            <td t-esc="row.cvr"></td>
+                                            <td t-esc="row.units_amount"></td>
+                                            <td t-esc="row.ctr">%</td>
+                                            <td t-esc="row.consumed_budget"></td>
+                                            <td t-esc="row.acos">%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pagination-controls">
+                                    <button class="btn btn-primary" id="prevPage" t-on-click="prevPageKeywords" t-att-disabled="state.currentPage_keywords === 1">⏮ Previous </button>
+                                    <span id="pageNumber" style="margin: 10px;"><t t-esc="state.currentPage_keywords"/> / <t t-esc="totalPagesKeywords"/></span>
+                                    <button class="btn btn-primary" id="nextPage" t-on-click="nextPageKeywords" t-att-disabled="state.currentPage_keywords === totalPagesKeywords"> Next ⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="grid-stack">
+                        
+                    </div>
+                </div>
+                
+            </div>
+            <footer class="footer">
+                <div class="container text-center">
+                    <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                        <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                    </a>
+                </div>
+            </footer>
+        </t>
+    </t>
+</templates>

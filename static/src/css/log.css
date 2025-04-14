@@ -1,0 +1,24 @@
+.o_statusbar_status_cancel button[data-value="cancel"] {
+    background-color: red !important;
+    color: white !important;
+}
+
+.o_statusbar_status_done button[data-value="done"] {
+    background-color: green !important;
+    color: white !important;
+}
+
+.o_statusbar_status_draft button[data-value="draft"] {
+    background-color: blue !important;
+    color: white !important;
+}
+
+.o_statusbar_status_sent button[data-value="sent"] {
+    background-color: orange !important;
+    color: white !important;
+}
+
+.o_statusbar_status_sale button[data-value="sale"] {
+    background-color: #007bff !important;
+    color: white !important;
+}

@@ -1,0 +1,120 @@
+.progress-ring {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: conic-gradient(#4caf50 0%, #ccc 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progress-ring::before {
+  content: '';
+  position: absolute;
+  top: 4px; /* Control the size of the inner white circle */
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background: #fff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.progress-ring span {
+  position: absolute;
+  z-index: 2;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* PREVIEW */
+.template-preview {
+  border: 1px solid #ccc;
+  height: 500px;
+  background-color: #e5ddd5; /* Fondo típico de WhatsApp */
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-header {
+  background-color: #075e54; /* Color verde oscuro de WhatsApp */
+  height: 30px;
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding: 5px 0;
+}
+
+.phone-screen {
+  height: calc(100% - 60px);
+  overflow-y: auto;
+  padding: 15px;
+  color: black;
+}
+
+.notification {
+  background-color: #DBF2F1; /* Azul claro, estilo de notificación de WhatsApp */
+  color: #8EA3A2;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.messageBox .message {
+  background: #ffffff; /* Fondo blanco para las burbujas de mensajes */
+  color: black;
+  padding: 10px 20px;
+  border-radius: 7.5px;
+  margin: 8px 0;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.messageInput {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 21px;
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.messageInput .input {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.messageInput .input input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 10px 5px;
+}
+
+.messageInput .input i {
+  padding: 5px;
+  color: #075e54; /* Color verde de WhatsApp */
+}
+
+.messageInput .mic {
+  background: #075e54; /* Color verde de WhatsApp */
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.activeMenu {
+  background: skyblue !important;
+}
+

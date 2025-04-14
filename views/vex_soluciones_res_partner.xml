@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_partner_search_inherit" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="instance_id"/>
+                <filter name="instance_filter" string="MercadoLibre Instance Active "
+                domain="[('instance_id', '=', context.get('default_instance_id', False))]"
+            />         
+            </xpath>
+        </field>
+    </record>
+</odoo>

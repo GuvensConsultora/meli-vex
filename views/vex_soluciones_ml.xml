@@ -1,0 +1,372 @@
+<odoo>
+
+
+    <!-- VISTA LISTA -->
+    <record id="view_mercado_libre_product_list" model="ir.ui.view">
+        <field name="name">mercado.libre.product.list</field>
+        <field name="model">mercado.libre.product</field>
+        <field name="arch" type="xml">
+            <tree string="Rules">
+                <field name="product" string="Publication"/>
+                <field name="price_score"/>
+                <field name="type_rule" string="Type"/>
+                <field name="text_publi" string="Rule"/>
+                <field name="new_price" string="Nuevo Precio"/>
+                <field name="state_publi" string="State"/>
+                <field name="write_date" string="Last Update"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_mercado_libre_product_form" model="ir.ui.view">
+        <field name="name">mercado.libre.product.form</field>
+        <field name="model">mercado.libre.product</field>
+        <field name="arch" type="xml">
+            <form string="Precios automáticos">
+
+                <!-- 🔹 Título principal -->
+                <div class="container-fluid p-3 text-center">
+                    <h1 class="fw-bold text-dark mb-4">Rule Price</h1>
+                </div>
+                <field name="currency_id" invisible="1"/>
+                <field name="instance_id" invisible="1"/>
+                <!-- 🔹 Contenedor de dos columnas -->
+                <div class="container" style="max-width: max-content; display: contents;">
+                    <div class="row justify-content-center">
+                        
+                        <!-- 🔹 PRIMERA COLUMNA -->
+                        <div class="col-md-3">
+                               
+                            <!-- 🔹 Sección: Selección de publicación -->
+                            <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+                                <div class="card-body">
+                                    <h4 class="fw-bold text-dark mb-3">1. Select the publication you wish to choose</h4>
+                                    <p class="text-muted fw-semibold" style="font-size: 0.85rem;">
+                                        Search product by <strong>title</strong> or <strong>number</strong>.
+                                    </p>
+                                    <div class="d-flex align-items-center border rounded p-2">
+                                        <field name="product" options="{'no_create': True}" widget="many2one"
+                                            string="Producto" class="form-control me-2"
+                                            domain="[('instance_id', '=', instance_id)]"/>
+                                        <div class="ms-3">
+                                            <field name="product_image" widget="image" 
+                                                readonly="1" style="max-width: 50px; height: auto;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+                                <div class="card-body" style="display: flex; flex-direction: column; ">
+                                    <h4 class="fw-bold text-dark mb-3">2. Select the type of Price Adjustment</h4>
+                                    <div style="display: flex; align-items: center;justify-content: center;">
+                                        <h5 style="margin-right: 10px;" title="The new price is calculated by comparing the prices of other related products">Manual (?)</h5>
+                                        <div style="margin-right: 10px;">
+                                            <field name="is_automatic_type" widget="boolean_toggle"/>
+                                        </div>
+                                        <h5 title="The new price will be given by Mercado Libre within a price range">Automatic (?)</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 🔹 SEGUNDA COLUMNA -->
+                        <div class="col-md-4" invisible="is_automatic_type">
+                            <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+                                <div class="card-body">
+                                    <h4 class="fw-bold text-dark mb-3">
+                                        3. Select products from other sellers to compare prices
+                                    </h4>
+                                    <p class="text-muted" style="font-size: 0.85rem;">
+                                        You can add between 1 and 20 products to compare.
+                                    </p>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <field name="link" string="Link de Mercado Libre" class="form-control"
+                                            placeholder="Enter the link here. Example: https://listado.mercadolibre.com.mx/altura-desarrollo-crecimiento-energia-ni%C3%B1os-premium-eg-p52#D"/>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-center border rounded p-3">
+                                        <field name="competence_image" widget="image"
+                                            style="max-width: 60px; margin-right: 15px;"/>
+                                        <div style="flex: 1;">
+                                            <field name="name" string="Artículo" class="fw-bold text-dark" style="font-size: 1rem;" readonly="1" force_save="1"/>
+                                            <p class="text-success fw-bold" style="font-size: 1.2rem;">$<field name="price" readonly="1" force_save="1"/></p>
+                                        </div>
+                                    </div> -->
+                                    <field name="name" invisible="1"/>
+                                    <field name="price" invisible="1"/>
+                                    <field name="competence_image" invisible="1"/>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <button name="action_save_and_add_competence" type="object" class="btn btn-secondary w-100">
+                                            <i class="fa fa-plus me-2"></i> Add product to compare
+                                        </button>
+                                    </div>
+
+                                    <separator string="Products to Compare" invisible="not products_compared"/>
+                                    <field name="products_compared" invisible="not products_compared">
+                                        <tree  editable="bottom" create="0" edit="0">
+                                            <field name="name" colspan="3"/>
+                                            <field name="price" widget="monetary" colspan="1"/>
+                                            <field name="image" widget="image" style="max-width: 10px !important;
+                                                max-height: 10px !important;
+                                                width: auto;
+                                                height: auto;" colspan="1"/>
+                                            <field name="currency_id" style="display: none"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <!-- 🔹 TERCERA COLUMNA -->
+                        <div class="col-md-5">
+                            <!-- 🔹 Sección: Configuración de Precio Automático -->
+                            <div class="card shadow-sm p-3 mb-4 bg-white rounded" id="hiddenDivs">
+                                <div class="card-body">
+                                    <h4 class="fw-bold text-dark mb-3" invisible="is_automatic_type">
+                                        4. Configure your automatic price
+                                    </h4>
+                                    <h4 class="fw-bold text-dark mb-3" invisible="not is_automatic_type">
+                                        3. Configure your automatic price
+                                    </h4>
+                                </div>
+                                <div class="row" invisible="is_automatic_type">
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" title="Select the comparison of your automatic price with the references" invisible="is_automatic_type">
+                                                4.1. Select Price Comparison (?)
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="precio_comparacion" style="flex: 1;" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" title="Choose whether you want your price to be cheaper or more expensive than the compared one" invisible="is_automatic_type">
+                                                4.2. Price Comparison Preference (?)
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="barato_caro" style="flex: 1;" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="margin-bottom: -25px;" invisible="is_automatic_type">
+                                    <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" title="Define price difference">
+                                        4.3. Price Adjustment (?)
+                                    </p>
+                                    <!-- <p class="text-muted" style="font-size: 0.7rem; font-weight: 600;">
+                                        The minimum and/or maximum value is defined so that the price is adjusted automatically.
+                                    </p> -->
+                                </div>
+
+                                <div class="row" invisible="is_automatic_type">
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                Select Price Method
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="precio_opcion" style="flex: 1;" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                invisible="not (precio_opcion == 'porcentaje')">
+                                                Enter a percentage value
+                                            </p>
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                invisible="not (precio_opcion == 'valor_fijo')">
+                                                Enter a flat value
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="rule_price_exact" style="flex: 1;" class="form-control"
+                                                    invisible="not (precio_opcion == 'valor_fijo')" widget="monetary"/>
+                                                <field name="incremento_precio_input" style="flex: 1;" class="form-control"
+                                                    invisible="not (precio_opcion == 'porcentaje')" widget="percentage"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="card-body" style="margin-bottom: -25px;">
+                                    <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                        Define gain value
+                                    </p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-7">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                Choose between percentage or flat value
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="ganancia_opcion" style="flex: 1;" class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                invisible="not (ganancia_opcion == 'porcentaje')">
+                                                Enter a percentage gain value
+                                            </p>
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                invisible="not (ganancia_opcion == 'valor_fijo')">
+                                                Enter a flat gain value
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="gain_flat_value" style="flex: 1;" class="form-control"
+                                                    invisible="not (ganancia_opcion == 'valor_fijo')" widget="monetary"/>
+                                                <field name="gain_percentage_value" style="flex: 1;" class="form-control"
+                                                    invisible="not (ganancia_opcion == 'porcentaje')" widget="percentage"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <div class="card-body" style="margin-bottom: -15px;"  invisible="not is_automatic_type">
+                                    <!-- <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                        Price Limits
+                                    </p> -->
+                                    <!-- <button name="action_calculate_price_limits" type="object" class="btn btn-secondary">
+                                        Calculate Price Limits
+                                    </button> -->
+                                    <p class="text-muted" style="font-size: 0.7rem; font-weight: 600;">
+                                        The minimum and/or maximum value is defined so that the price is adjusted automatically.
+                                    </p>
+                                </div>
+
+                                <div class="row" invisible="not is_automatic_type">
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                Minimum Price
+                                            </p>
+                                            <div class="input-group">
+                                                <field name="precio_min" style="flex: 1;" class="form-control" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
+                                            </div>
+                                            <p class="text-muted" style="font-size: 0.7rem; font-weight: 600;">
+                                                The minimum price is the cost price plus the selling cost in Mercado Libre.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="card-body">
+                                            <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                Maximun Price
+                                            </p>
+                                            <field name="exist_max_price" invisible="1"/>
+                                            <div class="input-group">
+                                                <field name="precio_max" style="flex: 1;" class="form-control" widget="monetary" force_save="1"/>
+                                            </div>
+                                            <p class="text-muted" style="font-size: 0.7rem; font-weight: 600;" invisible="not exist_max_price">
+                                                Suggested price by Mercado Libre.
+                                            </p>
+                                            <p class="text-muted" style="font-size: 0.7rem; font-weight: 600;" invisible="exist_max_price" >
+                                                There is no suggested price for Mercado Libre, enter a value.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="margin-bottom: -25px;  display: flex; align-items: center;" invisible="not is_automatic_type">
+                                    <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333; margin-right: 10px;">
+                                        As minimum price will not generate gain, do you want to add gain value? (optional)
+                                    </p>
+                                    <div>
+                                        <field name="want_profit" widget="boolean_toggle"/>
+                                    </div>
+                                </div>
+                                <div invisible="not is_automatic_type">
+                                    <div class="row" invisible="not want_profit">
+                                        <div class="col-6">
+                                            <div class="card-body">
+                                                <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;">
+                                                    Choose between percentage or flat value
+                                                </p>
+                                                <div class="input-group">
+                                                    <field name="ganancia_opcion" style="flex: 1;" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="card-body">
+                                                <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                    invisible="not (ganancia_opcion == 'porcentaje')">
+                                                    Enter a percentage gain value
+                                                </p>
+                                                <p class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #333;" 
+                                                    invisible="not (ganancia_opcion == 'valor_fijo')">
+                                                    Enter a flat gain value
+                                                </p>
+                                                <div class="input-group">
+                                                    <field name="gain_flat_value" style="flex: 1;" class="form-control"
+                                                        invisible="not (ganancia_opcion == 'valor_fijo')" widget="monetary"/>
+                                                    <field name="gain_percentage_value" style="flex: 1;" class="form-control"
+                                                        invisible="not (ganancia_opcion == 'porcentaje')" widget="percentage"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" invisible="is_automatic_type">
+                                    <p class="text-bold" style="font-size: 12px; font-weight: 600;" invisible="not texto_resumen">
+                                        While the rule is active, your price will be <field name="texto_resumen" readonly="1" widget="char"/> from the group you chose.
+                                    </p>
+                                    <field name="exist_gain" invisible="1"/>
+                                    <p class="text-bold" style="font-size: 1rem; font-weight: 600; color:red" invisible="exist_gain">
+                                        <field name="texto_precio" readonly="1" widget="char"/>
+                                    </p>
+                                    <p class="text-bold" style="font-size: 1rem; font-weight: 600; color:green" invisible="not exist_gain">
+                                        <field name="texto_precio" readonly="1" widget="char"/>
+                                    </p>
+                                </div>
+                                <div class="card-body">
+                                    <button type="object" name="action_save_data" class="btn btn-success w-100">
+                                        <i class="fa fa-save me-2"></i> Save Rule
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA HIJOS-->
+    <record id="view_mercado_libre_product_compared_list" model="ir.ui.view">
+        <field name="name">mercado.libre.product.compared.list</field>
+        <field name="model">mercado.libre.product.compared</field>
+        <field name="arch" type="xml">
+            <tree string="Prooduct Compared">
+                <field name="name"/>
+                <field name="price" widget="monetary"/>
+                <field name="image" widget="image"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACCIÓN PARA MOSTRAR LAS VISTAS -->
+    <record id="action_mercado_libre_product" model="ir.actions.act_window">
+        <field name="name">Rules</field>
+        <field name="res_model">mercado.libre.product</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_mercado_libre_product_list"/>
+        <field name="target">current</field>
+    </record>
+    
+
+    
+</odoo>
+

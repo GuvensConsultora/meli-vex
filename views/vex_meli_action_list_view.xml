@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vex_meli_action_view_form" model="ir.ui.view">
+        <field name="name">vex_meli_action_view_form</field>
+        <field name="model">vex.meli.action</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"></field>
+                            <field name="model"></field>
+                            <field name="uri"></field>
+                        </group>                  
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

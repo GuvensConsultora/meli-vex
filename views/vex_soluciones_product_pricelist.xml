@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_pricelist_view_product" model="ir.ui.view">
+        <field name="name">product.pricelist.view.form.inherit</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='item_ids']/tree/field[@name='product_tmpl_id']" position="before">
+                <field name="meli_id"></field>                
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="server_meli" readonly="1" string="This pricelist came from MELI ?"></field>
+                <field name="meli_code" invisible="1"></field>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_pricelist_view_tree_product" model="ir.ui.view">
+        <field name="name">product.pricelist.view.form.inherit</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="server_meli" readonly="1" string="This pricelist came from MELI ?"></field>
+                
+            </xpath>
+        </field>
+    </record>
+</odoo>

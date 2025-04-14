@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vex_group_product_view_tree" model="ir.ui.view">
+        <field name="name">vex.group.product.view.tree</field>
+        <field name="model">vex.group_product</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="image" widget="image"/>
+                <field name="url" />
+                <field name="num_publication" />
+                <field name="price" />
+                <field name="export_to_meli" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="vex_group_product_view_form" model="ir.ui.view">
+        <field name="name">vex.group.product.view.form</field>
+        <field name="model">vex.group_product</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="image" widget="image"/>
+                        <field name="url" />
+                        <field name="num_publication" />
+                        <field name="price" />
+                        <field name="export_to_meli" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

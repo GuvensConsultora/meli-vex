@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Vista heredada de sale.order para agregar el botón -->
+        <record id="view_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="action_raise_error" string="Mediation Menu" type="object"  class="btn btn-warning"  invisible="not in_mediation or expected_resolution or waiting_ml_intervention" context="{'resource_id': meli_code}" />
+                    <button name="button_mediation" string="Waiting for user to acept" type="object"  class="btn btn-secondary"   invisible="not expected_resolution" context="{'resource_id': meli_code}" />
+                    <button name="button_mediation_solved" string="Mediation Solved" type="object"  class="btn btn-info" invisible="not mediation_solved" context="{'resource_id': meli_code}" />
+                    <button name="button_ml_intervention" string="Waiting for response of ML" type="object"  class="btn btn-warning" invisible="not waiting_ml_intervention" context="{'resource_id': meli_code}" />
+                </header>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odoo-mercadolibre.InvalidLicenseDialog" owl="1">
+        <div class="p-3">
+            <h3 class="text-danger">Licencia inválida</h3>
+            <p>Tu licencia ha expirado o no es válida. Por favor, contacta a soporte o renueva tu suscripción.</p>
+            <button class="btn btn-primary mt-3" t-on-click="close">Cerrar</button>
+        </div>
+    </t>
+</templates>

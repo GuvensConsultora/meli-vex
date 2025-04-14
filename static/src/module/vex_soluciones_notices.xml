@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="vex_sync_mercado_libre.notices" owl="1">
+    <!-- GRAPH -->
+        <h1 style="margin-top: 20px; text-align: center">PUBLICATIONS</h1>
+        <!-- <button class="btn btn-primary" t-on-click="test" >get data meli</button> -->
+        <div style="justify-self: flex-end; display: flex; margin:3px">
+            <select class="custom-select mx-1" t-on-change="handleFilterChange" t-model="state.filterByDate" style="width: 150px;">
+                <option value="last_7">Last 7 days</option>
+                <option value="last_30">Last 30 days</option>
+            </select>
+            <t t-if="state.showDateFilter">
+                <label style="margin: 5px;">From: </label>
+                <input type="date" t-model="state.startDate" class="form-control" />
+                
+                <label style="margin: 5px;">To: </label>
+                <input type="date" t-model="state.endDate" class="form-control" />
+
+                <button t-on-click="applyDateFilter" class="btn btn-primary" style="margin-inline: 10px;">Filter</button>
+            </t>
+        </div>
+        <div class="container d-flex flex-column" style="max-width: 100%;">
+            <style>
+                .card-title {
+                    margin-bottom: 0.5rem !important;
+                    font-size: 1.25rem !important; /* 20px */
+                    font-weight: 500 !important; /* Negrita media */
+                    line-height: 1.2 !important;
+                }
+
+                .card-subtitle {
+                    margin-top: -0.25rem !important; 
+                    margin-bottom: 0.5rem !important;
+                    font-size: 1rem !important; /* 16px */
+                    font-weight: 400 !important;
+                    color: #6c757d !important; /* Color gris atenuado */
+                }
+
+                .card-text {
+                    margin-top: 0 !important;
+                    margin-bottom: 1rem !important;
+                    font-size: 1rem !important; /* 16px */
+                    font-weight: 400 !important;
+                    color: #212529 !important;
+                }
+
+            </style>
+            <div class="row flex-grow-1">
+                <div class="d-flex col-lg-12 col-md-12 col-sm-12 mb-3 h-50" style="justify-content: space-around;" gs-w="4" gs-h="3">
+                    <t t-if="state.dataPublications.length == 0">
+                        <h3>There are no posts to display. Come back soon</h3>
+                    </t>
+                    <t t-else="state.dataPublications.length != 0">
+                        <t t-foreach="state.dataPublications" t-as="row" t-key="row.id">
+                            <div class="card" style="width: 18rem; margin: 0.5%;">
+                                <div class="card-body">
+                                    <h5 class="card-title"><t t-esc="row.label"/></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">published on <t t-esc="row.from_date"/></h6>
+                                    <p class="card-text"><t t-esc="row.description"/></p>
+                                    <!-- <a href="#" class="card-link">Card link</a>
+                                    <a href="#" class="card-link">Another link</a> -->
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+
+        <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+            <div class="o_dashboard_view my-5">
+                <div class="grid-stack">                  
+                </div>
+            </div>
+        </div>
+        <!-- <footer class="footer">
+            <div class="container text-center">
+                <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                    <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                </a>
+            </div>            
+        </footer> -->
+    </t>
+</templates>

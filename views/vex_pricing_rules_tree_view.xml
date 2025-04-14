@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_product_pricing_tree" model="ir.ui.view">
+        <field name="name">mercado.libre.product.tree</field>
+        <field name="model">mercado.libre.product</field>
+        <field name="arch" type="xml">
+            <tree string="Reglas de Precios">
+                <field name="name" string="Tu Publicación"/>
+                <field name="rule_id" string="Regla ID"/>
+                <field name="price" string="Precio" widget="monetary"/>
+                <field name="state" string="Estado"/>
+                <field name="create_date" string="Fecha de Creación"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

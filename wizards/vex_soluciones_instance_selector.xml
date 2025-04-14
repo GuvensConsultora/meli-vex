@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_instance_selector_wizard" model="ir.ui.view">
+        <field name="name">instance.selector.wizard.form</field>
+        <field name="model">instance.selector.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <group>
+                    <field name="instance_id" widget="many2one" domain="[('store_type','=','mercadolibre')]"/>
+                </group>
+                <footer>
+                    <button name="apply_instance" string="Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="instance_selector_menu" inherit_id="web.webclient_layout">
+        <xpath expr="//div[contains(@class, 'o_menu_sections')]" position="inside">
+            <div id="instance-selector-container" class="o_instance_selector" style="margin-left: auto; padding-right: 10px;"></div>
+        </xpath>
+    </template>
+</odoo> -->
+<!-- <odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="//div[@class='o_menu_sections']" position="before">
+            <div class="o_instance_selector" t-if="env.is_module_installed('meli')">
+                <select class="o_instance_select">
+                    <option value="">Select Vex Instance</option>
+                     <t t-foreach="vex_instances" t-as="instance">
+                        <option t-att-value="instance.id" t-att-selected="user.vex_instance_id.id == instance.id and 'selected'">
+                            <t t-esc="instance.name"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </xpath>
+    </template>
+</odoo> -->

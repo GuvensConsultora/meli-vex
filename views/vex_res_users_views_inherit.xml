@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form_custom_section" model="ir.ui.view">
+        <field name="name">res.users.form.custom.section</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/> <!-- Hereda la vista base -->
+        <field name="arch" type="xml">
+            <!-- Inserta una nueva pestaña en el notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Vex Solutions">
+                    <group>
+                        <field name="is_question_responder"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vex_export_product_wizard_view_form" model="ir.ui.view">
+        <field name="name">vex_export_product_wizard.view.form</field>
+        <field name="model">vex.export.product.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="2">
+                        <group name="settings" string="Ajustes">
+                            <field name="vex_instance_id"></field>
+                            <field name="items_to_export"></field>
+                            <!-- <field name="export_images"></field> -->
+                            <field name="export_stock"></field>
+                            <field name="export_price"></field>
+                            
+                        </group>
+                        <group name="massive_actions" string="Acciones masivas">
+                            <field name="increase_or_discount" />
+                            <field name="amount" />
+                            <field name="type_amount" />
+                            <field name="massive_action" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Filtros">
+                            <field name="ckeck" widget="radio"/>
+                            <field name="type_product" />
+                            <field name="category_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    
+                    
+                        
+                    <notebook>
+                        <page name="products_to_export" string="Products to export">
+                            <field create="0"  name="export_product_ids" widget='many2many' options="{'no_quick_create': True, 'no_create_edit' : True}">
+                                <tree create="0" editable="bottom">
+                                    <field name="select_product" string=" "></field>
+                                    <field name="name" string="Product"></field>
+                                    <field name="num_publication" string="Publication"></field>
+                                    <field name="product_id" string="Parent Product"></field>
+                                    <field name="quantity" string="Qty"></field>
+                                    <field name="price_unit" string="Price"></field>
+                                    <field name="price_new"></field>
+                                    <field name="listing_type_id" decoration-warning="listing_type_id=='gold_special'" decoration-success="listing_type_id=='gold_pro'"></field>
+                                    <field name="categ_id" string="Category"></field>
+                                    <field name="meli_category_code" string="ML Category"></field>
+                                    <field name="ml_reference" />
+                                    <field name="action_export"></field>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <div class="row w-100 d-flex justify-content-end mr-1">
+                        <div class="col-2 d-flex justify-content-end p-0">
+                            <button type="object" name="export" class="btn btn-primary ml-3">Export</button>
+                        </div>
+                    </div>  
+                </footer>                    
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="vex_sync_mercado_libre.chatbot" owl="1">
+        <div class="">
+            <!-- Side navigation menu -->
+          <div class="sidebar" t-att-style="'box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.10);z-index:99; position: fixed; width: 300px; height: 100%; background: rgba(255, 255, 255, 0.9); padding: 20px; left:' + (state.isLeftSidebarVisible ? '0' : '-300px') + '; transition: left 0.3s; overflow-y: auto;'">
+            <h5 class="sidebar-title text-center mx-auto" style="padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid #e7e7e7; width: fit-content;">Questions</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link" t-on-click.prevent="()=>this.selectMenuOption('pending')" t-att-class="{ activeMenu: state.selectedMenuOption === 'pending' }">Pending questions</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" t-on-click.prevent="()=>this.selectMenuOption('respuestas-automaticas')" t-att-class="{ activeMenu: state.selectedMenuOption === 'respuestas-automaticas' }">Automatic Responses</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" t-on-click.prevent="()=>this.selectMenuOption('history')" t-att-class="{ activeMenu: state.selectedMenuOption === 'history' }">History</a>
+                </li>
+            </ul>
+        </div>
+            <!-- Content -->
+        <div class="content" t-att-style="'margin-left: ' + (state.isLeftSidebarVisible ? '300px' : '0') + '; transition: margin-left 0.3s; margin-right: 0; transition: margin-right 0.3s;'">
+            <div id="content-settings" style="margin-right: 20px; margin-left: 20px;">
+             <t t-if="state.selectedMenuOption === 'respuestas-automaticas'">
+                  <div class=" p-2" style="display: grid;">
+                    <div class="d-flex justify-content-between mb-4" style="margin-top: 10px;">
+                        <button class="btn btn-primary" t-on-click.prevent="()=>this.toggleSidebar('central')">Create new rule</button>
+                        <div class="d-flex align-items-center cursor-pointer" t-on-click.prevent="()=>this.toggleSidebar('right')">
+                            <h1 class="h4 fw-bold" style="margin: 0;">Settings ⚙️</h1>
+                            <!-- <img aria-hidden="true" alt="settings" src="https://openui.fly.dev/openui/24x24.svg?text=⚙️" /> -->
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="position-relative">
+                            <input type="text" class="form-control rounded" placeholder="Search..." />
+                            <span class="position-absolute end-0 top-50 translate-middle-y me-3" aria-hidden="true">🔍</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span>1-1 / 1</span>
+                            <button class="btn btn-outline-secondary">
+                                <svg fill="#71639e" xmlns="http://www.w3.org/2000/svg" 
+                              	 width="30px" height="30px" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
+                              <path d="M38,8.3v35.4c0,1-1.3,1.7-2.2,0.9L14.6,27.3c-0.8-0.6-0.8-1.9,0-2.5L35.8,7.3C36.7,6.6,38,7.2,38,8.3z"/>
+                              </svg>
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <svg fill="#71639e" xmlns="http://www.w3.org/2000/svg" 
+                                	 width="30px" height="30px" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
+                                <path d="M14,43.7V8.3c0-1,1.3-1.7,2.2-0.9l21.2,17.3c0.8,0.6,0.8,1.9,0,2.5L16.2,44.7C15.3,45.4,14,44.8,14,43.7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div >
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>Rule Active</th>
+                                    <th>User Input</th>
+                                    <th>Rule Type</th>
+                                    <th>Auto response</th>                        
+                                    <th>Actions</th> <!-- Columna adicional para el botón de eliminación -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Iteración de los items usando t-foreach -->
+                                <t t-foreach="state.items" t-as="item" t-key="item.id">
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex justify-content-between w-100 align-items-center">
+                                                <!-- Texto "Off" a la izquierda -->
+                                                <span class="ms-2" style="flex-shrink: 0;">Off</span>
+                                                <!-- Checkbox centrado en el medio -->
+                                                <div class="form-switch">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        t-att-id="item.id"  
+                                                        t-on-change="onCheckboxChange"                                                      
+                                                        t-att-checked="item.ruleActive"
+                                                        style="flex-grow: 0; flex-shrink: 0;"
+                                                    />
+                                                </div>
+                                                <!-- Texto "On" a la derecha -->
+                                                <span class="me-2" style="flex-shrink: 0;" t-esc="'On'"></span>
+                                            </div>
+                                            
+                                            
+                                        </td>
+                                        <td>
+                                            <!-- Mostrar el User Input dinámicamente -->              
+                                            <t t-esc="item.userInput" />
+                                        </td>
+                                        <td>
+                                            <!-- Mostrar el Rule Type dinámicamente -->
+                                            <t t-esc="item.ruleType" />
+                                        </td>
+                                        <td>
+                                            <!-- Mostrar la Auto response dinámicamente -->
+                                            <t t-esc="item.autoResponse" />
+                                        </td>                
+                                        <td class="d-flex align-items-center gap-2">
+                                            <!-- Botón de eliminación con texto -->
+                                            <button  t-on-click.prevent="deleteRule" t-att-id="item.id" style="font-size: 21px;" type="button" class="btn btn-sm" title="Delete rule" aria-label="Delete">Delete</button>
+                                            <!-- Botón de edición con texto -->
+                                            <button  t-on-click.prevent="editeRule" t-att-id="item.id" style="font-size: 21px;" type="button" class="btn btn-sm" title="Edit rule" aria-label="Edit">Edit</button>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <!-- Central Panel -->                  
+                    <div class="central" t-att-style="'box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);z-index:99; position: fixed; width: 600px; background: rgba(255, 255, 255, 1); height: 100%; padding: 20px; right:' + (state.isCentralSidebarVisible ? '0' : '-600px') + '; transition: right 0.3s; overflow-y: auto;'">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="h4 fw-bold text-dark mb-0" style = "padding-bottom: 20px;">Create new rule</h2>
+                            <button type="button" class="btn btn-close btn-sm" t-on-click.prevent="()=>this.toggleSidebar('central')" aria-label="Cerrar"></button>
+                        </div>
+
+                        <ul class="nav flex-column">
+                            
+
+                            <!-- Nueva regla de respuesta automática -->
+                            <div >
+                               
+
+                                <!-- Input de usuario -->
+                                <div class="mb-3">
+                                    <label for="userInput" class="form-label">User input</label>
+                                    <input type="text" class="form-control" id="answerText" placeholder="How much does shipping cost?" />
+                                </div>
+
+                                <!-- Respuesta automática -->
+                                <div class="mb-3">
+                                    <label for="autoResponse" class="form-label">Automatic response</label>
+                                    <input type="text" class="form-control" id="autoResponse" placeholder="Fast answer" />
+                                </div>
+
+                                <!-- Acción de la regla -->
+                                <!-- <div class="mb-3">
+                                    <label for="action" class="form-label">Action</label>
+                                    <input type="text" class="form-control" id="action" placeholder="Envíos" />
+                                </div> -->
+
+                                <!-- Tipo de regla -->
+                                <div class="mb-3">
+                                    <label for="ruleType" class="form-label">Type of rule</label>
+                                    <select class="form-select" id="ruleType" aria-label="Selecciona el tipo de regla">
+                                        <option value="contains">Text contains</option>
+                                        <option value="exact">Exact</option>
+                                        <option value="ends_with">Ending the word</option>
+                                        <option value="starts_with">Starting with the word</option>
+                                    </select>
+                                </div>
+
+                                <!-- Botón para guardar la nueva regla -->
+                                <button class="btn btn-success" t-on-click.prevent="createRule" >Create rule</button>
+                            </div>
+                        </ul>
+
+                    </div>
+
+                    <!-- Edit Panel -->                  
+                    <div class="edit" t-att-style="'box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);z-index:99; position: fixed; width: 600px; background: rgba(255, 255, 255, 1); height: 100%; padding: 20px; right:' + (state.isEditSidebarVisible ? '0' : '-600px') + '; transition: right 0.3s; overflow-y: auto;'">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="h4 fw-bold text-dark mb-0" style = "padding-bottom: 20px;">Edit Rule</h2>
+                            <button type="button" class="btn btn-close btn-sm" t-on-click.prevent="()=>this.toggleSidebar('edit')" aria-label="Cerrar"></button>
+                        </div>
+
+                        <ul class="nav flex-column">
+                            
+
+                            <!-- Nueva regla de respuesta automática -->
+                            <div >
+                               
+
+                                <!-- Input de usuario -->
+                                <div class="mb-3">
+                                    <label for="userInput" class="form-label">User input</label>
+                                    <input type="text" class="form-control" id="answerText_edit" placeholder="How much does shipping cost?" />
+                                </div>
+
+                                <!-- Respuesta automática -->
+                                <div class="mb-3">
+                                    <label for="autoResponse" class="form-label">Automatic response</label>
+                                    <input type="text" class="form-control" id="autoResponse_edit" placeholder="Fast answer" />
+                                </div>
+
+                                <!-- Acción de la regla -->
+                                <!-- <div class="mb-3">
+                                    <label for="action" class="form-label">Action</label>
+                                    <input type="text" class="form-control" id="action" placeholder="Envíos" />
+                                </div> -->
+
+                                <!-- Tipo de regla -->
+                                <div class="mb-3">
+                                    <label for="ruleType" class="form-label">Type of rule</label>
+                                    <select class="form-select" id="ruleType_edit" aria-label="Selecciona el tipo de regla">
+                                        <option value="contains">Text contains</option>
+                                        <option value="exact">Exact</option>
+                                        <option value="ends_with">Ending the word</option>
+                                        <option value="starts_with">Starting with the word</option>
+                                    </select>
+                                </div>
+
+                                <!-- Botón para guardar la nueva regla -->
+                                <button  id="button_edit" class="btn btn-success" t-on-click.prevent="udpateRuleData" >Update rule</button>
+                            </div>
+
+                            
+                        </ul>
+
+                    </div>
+
+
+                    <!-- Right sidebar -->
+                    <div class="sidebar" t-att-style="'box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);z-index:99; position: fixed; width: 600px; height: 100%;  background: rgba(255, 255, 255, 1); padding: 20px; right:' + (state.isRightSidebarVisible ? '0' : '-600px') + '; transition: right 0.3s; overflow-y: auto;'">
+                        <div class="d-flex justify-content-between">    
+                            <h2 class="h4 fw-bold text-dark mb-0" style = "padding-bottom: 20px;">GPT Integration configuration</h2>                                      
+                            <button type="button" class="btn btn-close btn-sm hover:text-muted" t-on-click.prevent="()=>this.toggleSidebar('right')" aria-label="Cerrar"></button>
+
+                        </div>
+                        <ul class="nav flex-column">
+
+                            <!-- Contenedor de configuración de OpenAI -->
+                            <div>
+
+                                <!-- Switch para habilitar la integración de OpenAI -->
+                                <div class="d-flex justify-content-between mb-3" style="margin-bottom: 0px !important;!I;!;">
+                                    <label class="form-label" for="processAllNotifications">Enable OpenAI Integration</label>
+                                    <div style="display: flex; width: 30%; justify-content: space-between;">
+                                        <div class="d-flex justify-content-between w-100 align-items-center">
+                                            <span class="ms-2" style="flex-shrink: 0;">Off</span>
+                                            <div class="form-switch">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    t-on-click.prevent="()=>this.toggleIsChatGPTConfigActive()"
+                                                    t-att-checked="state.isChatGPTConfigActive"
+                                                    id="enableOpenAIIntegration"
+                                                    style="flex-grow: 0; flex-shrink: 0;"
+                                                />
+                                            </div>
+                                            <span class="me-2" style="flex-shrink: 0;" t-esc="'On'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- API Key de OpenAI -->
+                                <div class="mb-3">
+                                    <label for="openAIAPIKey" class="form-label">Open AI API Key</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="openApiKey"
+                                        style="width: 100%;"
+                                        t-att-disabled="!state.isChatGPTConfigActive"
+                                    />
+                                </div>
+
+                                <!-- Selección del modelo de OpenAI -->
+                                <div class="mb-3">
+                                    <label for="openAIModel" class="form-label">OpenAI Model</label>
+                                    <select
+                                        name="OpenAI Model"
+                                        class="form-select"
+                                        id="openAIModel"
+                                        style="width: 100%;"
+                                        t-att-disabled="!state.isChatGPTConfigActive"
+                                        t-att-class="{ 'text-muted': !state.isChatGPTConfigActive }"
+                                    >
+                                        <option value="Default">Gpt-4o-mini</option>
+                                        <!-- <option value="TextDaVinci-003">Text da vinci 003</option>
+                                        <option value="TextCurie-001">Text curie 001</option>
+                                        <option value="TextBabbage-001">Text babbage 001</option>
+                                        <option value="TextAda-001">Text ada 001</option> -->
+                                    </select>
+                                </div>
+
+                                <!-- Límite de uso diario -->
+                                <div class="mb-3">
+                                    <label for="usageLimit" class="form-label">Daily Usage Limit</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="usageLimit"
+                                        style="width: 100%;"
+                                        t-att-disabled="!state.isChatGPTConfigActive"
+                                    />
+                                </div>
+
+                                <!-- Botón para guardar la nueva regla -->
+                                <button  id="button_edit" class="btn btn-success" t-on-click.prevent="updateGptData" >Update GPT</button>
+                            </div>
+
+                        </ul>
+
+                    </div>
+
+                  </div>
+                </t>
+                <t t-if="state.selectedMenuOption === 'history'">
+                  <div class="d-flex ml-1" style="gap: 15px; margin-left: 10px;">
+                    <div class="col-md-9">
+
+                        <t t-foreach="state.data" t-as="item" t-key="item.id">
+    <div class="mt-4 p-4 bg-light rounded shadow-lg w-100 w-lg-66 question-card">
+        <div class="d-flex align-items-center mb-3 p-3 shadow-sm bg-white rounded">
+            <t t-if="item.thumbnail">
+                 <img t-att-src="item.thumbnail" alt="Item Image" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;" />                           
+            </t>
+            <div class="ms-3">
+                <h2 class="h5 mb-1 question-item-title">
+                    <t t-esc="item.name" />
+                </h2>
+                <p class="text-info mb-2 question-item-price">
+                    $<t t-esc="item.list_price" />
+                </p>
+                <p class="text-muted question-item-publication">
+                    Publication: <span class="fw-bold publication-link">
+                        <t t-esc="item.meli_code" />
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <t t-foreach="item.questions" t-as="question" t-key="question.id">
+            <div class="question-container mb-4 p-4 bg-white rounded shadow-lg">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="question-details">
+                        <p class="text-dark question-text">
+                            <t t-esc="question.meli_text" />
+                        </p>
+                    </div>
+                </div>
+
+                <div class="answer-section mt-2">
+                    <span class="sc-question-detail__question--text">
+                        <t t-esc="question.meli_answer" />
+                    </span>
+                </div>
+
+                <!-- Mueve el separador aquí, antes de la sección "Asked by" -->
+                <hr class="my-3" />
+
+                <div class="answered-from mt-2" style="font-size: 14px;">
+                    <span class="text-muted">
+                        Asked by: <strong><t t-esc="question.meli_from_nickname" /></strong> | 
+                        Answered by: <strong><t t-esc="question.meli_answered_from_odoo" /></strong> | 
+                        response time: <strong><t t-esc="question.meli_answered_at" /></strong>
+                    </span>
+                </div>
+
+            </div>
+        </t>
+    </div>
+</t>
+                    </div>
+            
+                    <div class="mt-4 p-4 w-50 bg-light rounded shadow-lg">
+                        <h3 class="h6 fw-bold">Respuestas rápidas</h3>
+                        <div class="mt-2 d-flex flex-column">
+                            <button class="btn btn-primary mb-2">HAY STOCK</button>
+                            <button class="btn btn-primary mb-2">ENVIOS</button>
+                            <button class="btn btn-primary">SALUDOS</button>
+                        </div>
+                    </div>
+                </div>
+                  
+                </t>
+                  
+                <t t-if="state.selectedMenuOption === 'pending'">
+
+
+                 <div class="d-flex ml-1" style="gap: 15px; margin-left: 10px; overflow-y: auto; height: 100vh;">
+
+                      <div class="col-md-9">
+                          <t t-foreach="state.data" t-as="item" t-key="item.id">
+                              <div class="mt-4 p-4 bg-light rounded shadow-lg w-100 w-lg-66">
+                                <div class="d-flex align-items-center mb-3 p-3 shadow-sm bg-white rounded">
+                                  <t t-if="item.thumbnail">
+                                      <img t-att-src="item.thumbnail" alt="Item Image" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;" />
+                                  </t>
+                                  <div class="ms-3">
+                                      <h2 class="h5 mb-1" style="color: #333; font-weight: bold;">
+                                          <t t-esc="item.name" />
+                                      </h2>
+
+
+                                     <t t-if="item.thumbnail">
+                                        <p class="text-info mb-2" style="font-size: 16px;">
+                                            $<t t-esc="item.list_price" /> </p>
+                                        <p class="text-muted" style="font-size: 14px; margin-bottom: 0;">
+                                            Publication: <span class="fw-bold" style="color: #007bff;">
+                                                <t t-esc="item.meli_code" />
+                                            </span>
+                                        </p>
+                                    </t>
+
+
+                                  </div>
+                              </div>
+              
+                                  <!-- Iteración de preguntas -->
+                                  <t t-foreach="item.questions" t-as="question" t-key="question.id">
+                                      <div class="mb-4">
+                                          <p class="text-dark">
+                                              <t t-esc="question.meli_text" />
+                                              <span class="text-muted">
+                                                  <t t-esc="question.time" />
+                                              </span>
+                                          </p>
+                                          <t t-if="question.meli_id">
+                                              <textarea t-att-id="'response-' + question.meli_id" class="form-control mb-3" placeholder="Enter your answer"></textarea>
+                                          </t>
+                                          <div class="d-flex justify-content-end mt-2 align-items-center">
+                                              <span class="text-muted me-auto">
+                                                  Tiempo de respuesta: 
+                                                  <t t-esc="question.meli_created_at" />
+                                              </span>
+                                              <button t-att-id="'delete-' + question.meli_id" class="text-muted btn btn-link p-0" t-on-click.prevent="()=>this.deleteButtonClick(question.meli_id)">
+                                                  <img src="https://openui.fly.dev/openui/24x24.svg?text=🗑️" alt="Delete" />
+                                              </button>
+                                              <button class="btn btn-primary d-flex align-items-center ms-2" t-on-click.prevent="()=>this.botonResponder(question.meli_id, question.id)">
+                                                  <span>Reply</span>
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </t>
+                              </div>
+                          </t>
+                      </div>
+              
+                      <div class="mt-4 p-4 w-50 bg-light rounded shadow-lg">
+                          <h3 class="h6 fw-bold">Quick Replies</h3>
+                          <div class="mt-2 d-flex flex-column">
+                              <button class="btn btn-primary mb-2">IN STOCK</button>
+                              <button class="btn btn-primary mb-2">SHIPPING</button>
+                              <button class="btn btn-primary">GREETINGS</button>
+                          </div>
+                      </div>
+                  </div>
+
+
+              </t>
+              
+               
+            </div>
+        </div>
+        </div>
+    </t>
+</template>

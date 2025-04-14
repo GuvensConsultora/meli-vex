@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="vex_sync_mercado_libre.dashboard_ads" owl="1">
+    <!-- GRAPH -->
+        <div class="o_action_manager custom-whatsapp-suite" style="overflow: auto; max-width: 100%;">
+            <div class="o_dashboard_view my-5">
+                 <div class="d-flex justify-content-between gap-4 flex-wrap"  style="row-gap: 10px; padding-top: 20px; margin-left: 20px; margin-right: 20px;">
+
+                    <!-- Elemento 1 -->
+                    <div class="card p-3 text-center " style="min-width: 150px; flex-grow: 1;">
+                        <p>value</p>
+                        <h6 class="mt-2" style="cursor: pointer;">Elemento 1</h6>
+                    </div>
+
+                    <!-- Elemento 2 -->
+                    <div class="card p-3 text-center " style="min-width: 150px; flex-grow: 1;">
+                        <p>value</p>
+                        <h6 class="mt-2">Elemento 2</h6>
+                    </div>
+
+                    <!-- Elemento 3 -->
+                    <div class="card p-3 text-center " style="min-width: 150px; flex-grow: 1;">
+                        <p>value</p>
+                        <h6 class="mt-2">Elemento 3</h6> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container d-flex flex-column" style="max-width: 100%;">
+            <div class="row flex-grow-1">
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="categoriasProductosChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="productosSincronizadosChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="line1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="pie1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <h1 style="font-family: 'Arial', 'Helvetica', sans-serif; 
+                                font-size: 24px; 
+                                font-weight: 600; 
+                                color: #666666;  /* Color gris más suave */
+                                margin: 10px 0;  /* Un pequeño margen superior e inferior */
+                                padding: 0;
+                                text-align: center;">  <!-- Centrado -->
+                            Top Clients
+                        </h1>
+                        <!-- Tabla Responsive -->
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto; width: 100%;">
+                            <table class="table table-striped table-sm" style="font-size: 22px; border-spacing: 0;">
+                                <thead>
+                                    <tr>
+                                        <th style="white-space: nowrap; padding: 4px;" t-esc="'Name'">Name</th>
+                                        <th style="white-space: nowrap; padding: 4px;" >Order number</th>
+                                        <th style="white-space: nowrap; padding: 4px;" >Volume (MXN)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.top_clients_data" t-as="row" t-key="row.name">
+                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 4px;" t-esc="row.name"></td>
+                                        <td style="white-space: nowrap;  padding: 4px;" t-esc="row.purchases"></td>
+                                        <td style="white-space: nowrap;  padding: 4px;" t-esc="row.volume"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Canvas para Doughnut Chart -->
+                        <canvas t-ref="doughnut1" style="display: none;"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50 table-responsive" gs-w="4" gs-h="4">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <h1 style="font-family: 'Arial', 'Helvetica', sans-serif; 
+                                font-size: 24px; 
+                                font-weight: 600; 
+                                color: #666666;  /* Color gris más suave */
+                                margin: 10px 0;  /* Un pequeño margen superior e inferior */
+                                padding: 0;
+                                text-align: center;" t-esc="'Top Products'"
+                                >  <!-- Centrado -->
+                            Top Products
+                        </h1>
+
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto; width: 100%;">
+                            <table class="table table-striped table-sm" style="font-size: 22px; border-spacing: 0;">
+                                <thead>
+                                    <tr>
+                                        <th style="white-space: nowrap; padding: 4px;" >Product name</th>
+                                        <th style="white-space: nowrap; padding: 4px;">Number of sales</th>
+                                        <th style="white-space: nowrap; padding: 4px;">Sales volume (MXN)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.top_products_data" t-as="row" t-key="row.name">
+                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 4px;" t-esc="row.name"></td>
+                                        <td style="white-space: nowrap;  padding: 4px;" t-esc="row.quantity_sold"></td>
+                                        <td style="white-space: nowrap;  padding: 4px;" t-esc="row.sales_volume"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <canvas t-ref="radar1" style="display: none;"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="bar1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="polarArea1"></canvas>
+                    </div>
+                </div>
+                <div class="grid-stack-item col-lg-4 col-md-6 col-sm-12 mb-3 h-50" gs-w="4" gs-h="3">
+                    <div class="grid-stack-item-content card-body" style="min-height: 350px;">
+                        <canvas t-ref="bubble1"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="o_action_manager custom-whatsapp-suite" bis_skin_checked="1" style="overflow: auto !important;">
+            <div class="o_dashboard_view my-5">
+                <!-- <div class="o_dashboard_header mb-4 text-center">
+                    <h1 style="color:#71639e">Dashboard</h1>
+                    <p>Sales</p>
+                </div> -->
+                <div class="container" style="max-width: none !important">
+                    <div class="grid-stack-item-content p-3" >
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0">Recent orders</h5>
+                        <div>
+                            <input type="text" class="form-control mr-2" id="searchInput" placeholder="Search for names..." style="width: 200px; display: inline-block;"/>
+                            <select class="custom-select mx-1" id="statusFilter" style="width: 150px;">
+                                <option value="">All Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        </div>
+                        <div class="table-responsive" style="width: 100%;"> 
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col" t-esc="'Name'" >Name</th>
+                                <th scope="col" t-esc="'Order Number'" >Order Number</th>
+                                <th scope="col" t-esc="'Mail'" >Mail</th>
+                                <th scope="col" t-esc="'Phone'" >Phone</th>
+                                <th scope="col" t-esc="'Amount'" >Amount</th>
+                                <th scope="col" t-esc="'Products'" >Products</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="state.latest_orders" t-as="row" t-key="row.name">
+                                    <td t-esc="row.client_name"></td>
+                                    <td t-esc="row.order_number"></td>
+                                    <td t-esc="row.email"></td>
+                                    <td t-esc="row.phone"></td>
+                                    <td t-esc="row.amount_total"></td>
+                                    <td t-esc="row.product_name"></td>
+                                </tr>
+                            </tbody>
+                            
+                        </table>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="grid-stack">
+                    
+                </div>
+            </div>
+            
+        </div>
+        <footer class="footer">
+                <div class="container text-center">
+                    <a href="https://www.pasarelasdepagos.com/venta-multicanal-marketplaces/" target="_blank" style="text-decoration: none;">
+                        <span style="color: black; font-size: 11px;">Venta Multicanal Marketplaces 2.0 All Rights Reserved.</span>
+                    </a>
+                </div>
+            </footer>
+    </t>
+</templates>

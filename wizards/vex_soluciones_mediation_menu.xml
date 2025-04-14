@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_mediation_menu" model="ir.ui.view">
+        <field name="name">vex.soluciones.mercadolibre.claim.form</field>
+        <field name="model">vex.soluciones.mercadolibre.claim</field>
+        <field name="arch" type="xml">
+            <form string="Mediation Menu">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Claim Details</h1>
+                    </div>
+                    <group>
+                        <group string="Claim Information">
+                            <field name="claim_id" readonly="1" string="Claim ID"/>
+                            <field name="resource_id" readonly="1" string="Resource ID"/>
+                        </group>
+                        <group string="Status Information">
+                            <field name="status" readonly="1" string="Claim Status" widget="statusbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Complaint Details">
+                            <field name="razon_complaiment" readonly="1" string="Reason for Complaint" nolabel="1"/>
+                        </page>
+                        <page string="Responder mediación">
+                            <group>
+                                <field name="response_option" string="Acción a tomar" widget="radio"/>
+                                <group invisible="not response_option == 'refund_full'">
+                                    <!-- <field name="refund_full_reason" string="Razón del Reembolso Total"/>                                     -->
+                                </group>
+                                <group invisible="not response_option == 'refund_partial'">
+                                    <field name="refund_partial_amount" string="Monto del Reembolso Parcial"/>
+                                    <!-- <field name="refund_partial_reason" string="Razón del Reembolso Parcial"/> -->
+                                </group>
+                                <group invisible="not response_option == 'external_support'">
+                                    <!-- <field name="external_support_comment" string="Comentario para Soporte Externo"/> -->
+                                </group>
+                                 <button name="action_button_reclamation" type="object" string="Click Para Enviar Peticion" class="btn-primary"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_mediation_menu" model="ir.actions.act_window">
+        <field name="name">Mediation Menu</field>
+        <field name="res_model">vex.soluciones.mercadolibre.claim</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_mediation_menu"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
