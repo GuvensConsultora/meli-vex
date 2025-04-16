@@ -150,7 +150,14 @@ class InheritProductTemplate(models.Model):
 
     image_no_bg = fields.Binary("Imagen sin fondo", help="Imagen del producto con fondo blanco.")
 
-    market_fee = fields.Monetary('MELI fee')
+    market_fee = fields.Monetary(string='MELI fee')
+
+    competitor_price_history_ids = fields.One2many(
+        'mercado.libre.product.compared',
+        compute='_compute_competitor_price_history',
+        string="Historial de Precios de la Competencia",
+        store=False  # Solo visualización
+    )
     # def remove_background_odoo(self):
     #     """ 
     #     Elimina el fondo de la imagen principal (image_1920) y la guarda en image_no_bg
@@ -247,8 +254,15 @@ class InheritProductTemplate(models.Model):
                 else:
                     print(f"Error {response.status_code}: {response.text}")
 
-
-
+    def _compute_competitor_price_history(self):
+        for product in self:
+            ml_products = self.env['mercado.libre.product'].search([
+                ('product', '=', product.id)
+            ])
+            compared = self.env['mercado.libre.product.compared'].search([
+                ('parent_id', 'in', ml_products.ids)
+            ])
+            product.competitor_price_history_ids = compared
 
     @api.model
     def consumir_score_performance(self):   

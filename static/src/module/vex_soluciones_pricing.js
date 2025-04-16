@@ -13,31 +13,35 @@ class ChatbotTemplate extends Component {
   static template = "vex_sync_mercado_libre.pricing";
 
   setup() {
-     //Code to open view
-     this.rpc = useService("rpc");  // Using the RPC service
-     this.action = useService("action");  // Using the Action service to open the view
-     const today = new Date();
-     const currentMonth = today.toISOString().slice(0, 7);
-     self = this.action; // Ensure self is set in the constructor
+    this.chartLibReady = useRef(false);
+    this.dataReady = useRef(false);
+    //Code to open view
+    this.rpc = useService("rpc");  // Using the RPC service
+    this.action = useService("action");  // Using the Action service to open the view
+    const today = new Date();
+    const currentMonth = today.toISOString().slice(0, 7);
+    self = this.action; // Ensure self is set in the constructor
 
-     this.http = useService("http");
-     this.orm = useService("orm");
-     this.dialog = useService("dialog");
-     this.notificationService = useService("notification");
+    this.http = useService("http");
+    this.orm = useService("orm");
+    this.dialog = useService("dialog");
+    this.notificationService = useService("notification");
 
    //const ajax = require('web.ajax');
     console.log('Component setup executed');
     this.state = useState({
-      price_score: 0,
+      price_score: '',
       total_sales: 0,
+      last_month_sales: 0,
       increased_profit: 0,
       profit_margin: 0,
       below_avg_price: 0,
       in_avg_price: 0,
       above_avg_price: 0,
+      currency_symbol: '',
       new_customers_last_month:0,
       total_customers_count: 0,
-      products_count: 2422,
+      products_count: 0,
       questions_count : 0,
       competitors_count: 0,
       selectedMenuOption: "dashboard",
@@ -77,17 +81,15 @@ class ChatbotTemplate extends Component {
     this.chart7 = null;
     //this.chart8 = null;
     //this.chart9 = null;
-           
 
-    onWillStart(async () => {           
+    onWillStart(async () => {
         await loadBundle("web.chartjs_lib");
-        await loadJS("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js")
-    });
+        await loadJS("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js");
+        this.chartLibReady.value = true;
 
-    // Inicializar los "segmentos" (partners) al montar el componente
-    onWillStart(async () => {            
+        await this.load_data(); // espera a que cargue la data
         
-        this.addBackground()
+        this.dataReady.value = true;
     });
     
     onMounted(async () => {
@@ -103,17 +105,15 @@ class ChatbotTemplate extends Component {
     });
 
     useEffect(() => {
+        if (!this.chartLibReady.value || !this.dataReady.value) return;
+
         const grid = GridStack.init({
             cellHeight: 'auto',
-            animate: false, // show immediate (animate: true is nice for user dragging though)
-            // columnOpts: {
-            //     columnWidth: 100, // wanted width
-            // },
+            animate: false,
         }).on('change', (ev, gsItems) => {
             this.column = grid.getColumn();
-            console.log(this.column)
-        });;
-        this.load_data();
+            console.log(this.column);
+        });
 
         this.renderChart();
         this.renderChart2();
@@ -122,82 +122,107 @@ class ChatbotTemplate extends Component {
         this.renderChart6();
         this.renderChart7();
 
-      //grid.load(this.state.items);
-
-
-    },() => []    
-        );
+    }, () => [this.chartLibReady.value, this.dataReady.value]);
 
 
     onWillUnmount(() => {
         this.onWillUnmount()
         this.delBackground()
     });
-    this.load_data();
+    //this.load_data();
     //this.getSessionInfo();
-  
-
   }
   
   redirigirAConfiguracion() {
     this.action.doAction("vex_sync_store.vex_sync_store_open_instances");
   }
 
+  get salesGrowthText() {
+    console.log("Evaluando salesGrowthText con", this.state.total_sales, this.state.last_month_sales);
+    const total = this.state.total_sales;
+    const last = this.state.last_month_sales;
+
+    if (!total || !last) {
+        return {
+            text: '⬆0% since last month',
+            class: 'text-success'
+        };
+    }
+
+    const growth = ((total - last) / last) * 100;
+    const growthFixed = Math.abs(growth).toFixed(2);
+
+    if (growth >= 0) {
+        return {
+            text: `⬆${growthFixed}% since last month`,
+            class: 'text-success'
+        };
+    } else {
+        return {
+            text: `⬇${growthFixed}% since last month`,
+            class: 'text-danger'
+        };
+    }
+    }
+
   async load_data(){
   //   this.fetchOrdersSyncedToday();
-    this.fetchPriceScoreLetter();
-    this.fetchTotalSales();
-    this.fetchProductPrices();
-    this.fetchAvgProfitMargin();
-    this.fetchBelowAvgPrice();
-    this.fetchInAvgPrice();
-    this.fetchAboveAvgPrice();
-    this.fetchProfitMarginEvolution();
-    this.fetchPriceEvolutionGrouped();
-    this.fetchDailySalesEvolution();
-    this.fetchProfitGrowth();
-    this.fetchTotalCompetitorsCount();
-  //   this.fetchNewCustomersLastMonth();
-  //   this.fetchTotalCustomersCount();
-    this.fetchTotalProductsCount();
-  //   this.fectNewCustomerLastSixMonths();
-  //   this.fetchMonthlyProfitLastSixMonths();
-  //   this.fetchTopClients();
-  //   this.fetchTopProducts();
-  //   this.fetchLatestOrders();
-  //   //this.get_average_custom_order_last_6_months();
-  //   this.top_5_categories();
-  //  // this.CompletedAndCanceled4months();
-  //   this.get_sales_by_channel_last_5_months();
-  //   this.get_questions_count();
-  //   //this.question_count_by_category();
-
-
+    await this.fetchPriceScoreLetter();
+    await this.fetchTotalSales();
+    await this.fetchLastMonthSales();
+    await this.fetchProductPrices();
+    await this.fetchAvgProfitMargin();
+    await this.fetchBelowAvgPrice();
+    await this.fetchInAvgPrice();
+    await this.fetchAboveAvgPrice();
+    await this.fetchProfitMarginEvolution();
+    await this.fetchPriceEvolutionGrouped();
+    await this.fetchDailySalesEvolution();
+    await this.fetchProfitGrowth();
+    await this.fetchTotalCompetitorsCount();
+    await this.fetchTotalProductsCount();
 
     this.render();
 }
 
 async fetchPriceScoreLetter (){
-    let number = await jsonrpc('/web/dataset/call_kw', {
-        model: 'mercado.libre.product',
-        method: 'get_score_letter',
-        args: [],
-        kwargs: {}
-    });
-    console.log("fetchPriceScoreLetter",number) ;
-    this.state.price_score = number;
+    try {
+        let number = await jsonrpc('/web/dataset/call_kw', {
+            model: 'mercado.libre.product',
+            method: 'get_score_letter',
+            args: [],
+            kwargs: {},
+        });
+        console.log("fetchPriceScoreLetter", number);
+        this.state.price_score = number;
+    } catch (e) {
+        console.error("Error al obtener score letter:", e);
+    }
   }
 
 async fetchTotalSales (){
-  let number = await jsonrpc('/web/dataset/call_kw', {
+  let result = await jsonrpc('/web/dataset/call_kw', {
       model: 'sale.order',
       method: 'total_ventas_mercadolibre',
       args: [],
       kwargs: {}
   });
-  console.log("fetchTotalSales",number) ;
-  this.state.total_sales = number;
+  console.log("fetchTotalSales",result) ;
+  this.state.total_sales = result.total_sales;
+  this.state.currency_symbol = result.currency_symbol;
+  
 }
+
+async fetchLastMonthSales (){
+    let result = await jsonrpc('/web/dataset/call_kw', {
+        model: 'sale.order',
+        method: 'mes_pasado_ventas_mercadolibre',
+        args: [],
+        kwargs: {}
+    });
+    console.log("fetchLastMonthSales",result) ;
+    this.state.last_month_sales = result.total_sales;
+  }
 
 async fetchProductPrices (){
     let datos = await jsonrpc('/web/dataset/call_kw', {

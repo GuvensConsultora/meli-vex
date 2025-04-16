@@ -55,7 +55,7 @@
                                     <!-- Orders synced today -->
                                     <div class="card p-3 text-center" style="min-width: 150px; flex-grow: 1;">
                                         <p t-esc="state.price_score"></p>
-                                        <h6 class="mt-2" t-esc="'Price score (?)'"></h6>
+                                        <h6 class="mt-2" t-esc="'Price score (?)'" title="A - Above Average; B - On Average; C - Below Average"></h6>
                                     </div>
 
                                     <!-- Total orders -->
@@ -72,8 +72,8 @@
 
                                     <!-- Elemento 4 -->
                                     <div class="card p-3 text-center " style="min-width: 150px; flex-grow: 1;">
-                                        <p t-esc="state.total_sales"></p>
-                                        <span>0.0% + since last month</span>
+                                        <p t-esc="state.currency_symbol + ' ' + state.total_sales"></p>
+                                        <span t-att-class="salesGrowthText.class" t-esc="salesGrowthText.text"></span>
                                         <h6 class="mt-2" t-on-click="total_orders_views" t-esc="'Total Sales'"></h6>
                                     </div>
 

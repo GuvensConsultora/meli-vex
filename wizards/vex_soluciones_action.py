@@ -693,7 +693,8 @@ class VexSolucionesAction(models.TransientModel):
                     _logger.info('sku_id%s',sku_id)
                     stock_location_obj = self._get_stock_location(item_data['shipping']['logistic_type'])
                     _logger.info('stock_location_obj%s',stock_location_obj)
-
+                    marketplace_fee = self._get_marketplace_fee(headers, item_data['price'], item_data['listing_type_id'], item_data['category_id'], self.vex_instance_id.id)
+                    _logger.info('marketplace_fee%s',marketplace_fee)
                     _logger.info(1)
                     product_values = {
                         'categ_id': category_id.id,
@@ -721,7 +722,8 @@ class VexSolucionesAction(models.TransientModel):
                         'instance_id': self.vex_instance_id.id,
                         'stock_type': stock_location_obj,
                         'upc': next((attr['value_name'] for attr in item_data['attributes'] if attr['id'] == 'GTIN'), None),
-                        'store_type': 'mercadolibre'
+                        'store_type': 'mercadolibre',
+                        'market_fee': marketplace_fee
                     }
                     _logger.info('product_values%s',product_values)
                     if existing_product_id:
@@ -984,6 +986,20 @@ class VexSolucionesAction(models.TransientModel):
             log("Nuevo stock.quant creado para el producto %s con cantidad %s en la ubicación %s.", product.name, stock_qty, location.complete_name)
 
         log("Proceso de actualización/creación de stock completado con éxito.")
+    
+    def _get_marketplace_fee(self, headers, price, listing_type_id, category_id, instance_id):
+        instance = self.env['vex.instance'].search([('id', '=', instance_id)])
+        code_country = instance.meli_country
+        url = f"https://api.mercadolibre.com/sites/{code_country}/listing_prices?price={price}&listing_type_id={listing_type_id}&category_id={category_id}"
+        _logger.info(url)
+        response = requests.get(url, headers=headers)
+        market_fee = 0.0
+        if response.status_code == 200:
+            res_json = json.loads(response.text)
+            market_fee = res_json['sale_fee_amount']
+        else:
+            _logger.info(response.text)
+        return market_fee
     
     def get_data_from_api(self, uri, header):
         """

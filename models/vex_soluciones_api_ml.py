@@ -76,7 +76,8 @@ class MercadoLibreProduct(models.Model):
     gain_percentage_value = fields.Float('gain_percentage_value')
     is_rule_active = fields.Boolean(string='Activo', default=True)
 
-    product_name = fields.Char(string="Nombre del Producto", related="product.name", store=True)
+    product_name = fields.Char(string="Nombre del Producto Comparado", store=True)
+    product_status = fields.Char(string="Status del Producto Comparado", store=True)
     product_actual_price = fields.Float(string="Precio Actual del Producto", related="product.list_price", store=True)
     numero_competencias = fields.Integer(string="Numero de Competencias")
 
@@ -108,6 +109,7 @@ class MercadoLibreProduct(models.Model):
         compute="_compute_price_category",
         store=True
     )
+    price_score_badge = fields.Html(string="Price Score", compute="_compute_price_score_badge", sanitize=False)
 
     @api.model
     def create(self, vals):
@@ -142,6 +144,43 @@ class MercadoLibreProduct(models.Model):
 
         _logger.warning("No se pudo obtener la currency: instance o default_currency no definidos")
         return None
+    
+    @api.depends('price_score')
+    def _compute_price_score_badge(self):
+        for rec in self:
+            if rec.price_score == 'A':
+                rec.price_score_badge = '''
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="background:#28a745;color:white;border-radius:50%;width:24px;height:24px;
+                                display:flex;align-items:center;justify-content:center;font-weight:bold;">
+                        A
+                    </div>
+                    <span style="color:#28a745;font-weight:bold;">Above Average</span>
+                </div>
+            '''
+            elif rec.price_score == 'B':
+                rec.price_score_badge = '''
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="background:#ffc107;color:white;border-radius:50%;width:24px;height:24px;
+                                display:flex;align-items:center;justify-content:center;font-weight:bold;">
+                        B
+                    </div>
+                    <span style="color:#ffc107;font-weight:bold;">On Average</span>
+                </div>
+            '''
+            elif rec.price_score == 'C':
+                rec.price_score_badge = '''
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="background:#dc3545;color:white;border-radius:50%;width:24px;height:24px;
+                                display:flex;align-items:center;justify-content:center;font-weight:bold;">
+                        C
+                    </div>
+                    <span style="color:#dc3545;font-weight:bold;">Below Average</span>
+                </div>
+            '''
+            else:
+                rec.price_score_badge = ''
+
     @api.depends('product')
     def _compute_name(self):
         for record in self:
@@ -168,36 +207,23 @@ class MercadoLibreProduct(models.Model):
     
     @api.model
     def get_score_letter(self):
-        for record in self:
-            score_counts = self.read_group(
-                [('price_score', 'in', ['A', 'B', 'C'])],
-                ['price_score'],
-                ['price_score']
-            )
-            
-            count_A = count_B = count_C = 0
+        count_A = self.env['mercado.libre.product'].search_count([('price_score', '=', 'A')])
+        count_B = self.env['mercado.libre.product'].search_count([('price_score', '=', 'B')])
+        count_C = self.env['mercado.libre.product'].search_count([('price_score', '=', 'C')])
 
-            for count in score_counts:
-                if count['price_score'] == 'A':
-                    count_A = count['__count']
-                elif count['price_score'] == 'B':
-                    count_B = count['__count']
-                elif count['price_score'] == 'C':
-                    count_C = count['__count']
-            
-            total_records = count_A + count_B + count_C
-            if total_records == 0:
-                return 'C'
+        total_records = count_A + count_B + count_C
+        if total_records == 0:
+            return 'C'
 
-            # A=3, B=2, C=1
-            score = (count_A * 3 + count_B * 2 + count_C * 1) / total_records
-            
-            if score >= 2.5:
-                return 'A'
-            elif score >= 1.5:
-                return 'B'
-            else:
-                return 'C'
+        # A=3, B=2, C=1
+        score = (count_A * 3 + count_B * 2 + count_C * 1) / total_records
+
+        if score >= 2.5:
+            return 'A'
+        elif score >= 1.5:
+            return 'B'
+        else:
+            return 'C'
             
     @api.depends('products_compared.price', 'new_price')
     def _compute_price_category(self):
@@ -606,12 +632,14 @@ class MercadoLibreProduct(models.Model):
                 'type_rule': 'auto' if self.is_automatic_type else 'manual',
                 'price_score': self.price_score
             })
-            prod = self.env['product.template'].search([('id','=', self.product.id)])
-            prod.sudo().write({
-                'price_score': self.price_score,
-                'market_fee': self.meli_fee,
-                'list_price': self.new_price,
-            })
+        prod = self.env['product.template'].sudo().search([('id','=', self.product.id)])
+        _logger.info(f"Producto encontrado: {prod}")
+        _logger.info(f"price score: {self.price_score}")
+        _logger.info(f"new price: {self.new_price}")
+        prod.write({
+            'price_score': self.price_score,
+            'list_price': self.new_price,
+        })
         self.env['bus.bus']._sendone(
             self.env.user.partner_id,
             'simple_notification',
@@ -671,7 +699,7 @@ class MercadoLibreProduct(models.Model):
         for record in self:
             record.product_image = record.product.image_1920 if record.product else False
 
-    @api.onchange('link')
+    #@api.onchange('link')
     def pruebas(self):
         _logger.info("Iniciando pruebas")
         #url_ ="https://articulo.mercadolibre.com.mx/MLM-2876206672-botas-mujer-trabajo-casquillo-negras-cafes-ram-401-d-_JM#reco_item_pos=2&reco_backend=item_decorator&reco_backend_type=function&reco_client=home_items-decorator-legacy&reco_id=88427083-22fa-49e4-bd69-3707e59eae68&reco_model=&c_id=/home/bookmarks-recommendations-seed/element&c_uid=54c7b295-40da-4aa6-9cd0-9169d6e051d8&da_id=bookmark&da_position=2&id_origin=/home/dynamic_access&da_sort_algorithm=ranker"
@@ -697,10 +725,12 @@ class MercadoLibreProduct(models.Model):
                 nombre = product_info.get("name", "Name not available")
                 precio = product_info.get("buy_box_winner", {}).get("price", "Price not available")
                 moneda = product_info.get("buy_box_winner", {}).get("currency_id", "MXN")
+                status = product_info.get("status", "")
                 image_url = product_info.get("pictures", [{"url": None}])[0]["url"]
 
                 self.product_name = nombre
                 self.price = precio
+                self.product_status = status
 
                 image_response = requests.get(image_url)
                 if image_response.status_code == 200:
@@ -713,8 +743,9 @@ class MercadoLibreProduct(models.Model):
                     if self.competence_image:
                         _logger.info("Imagen guardada de competencia en su field correctamente")
 
-                _logger.info(f"Nombre del producto: {self.product_name}")
-                _logger.info(f"Precio del producto: {self.price}")
+                _logger.info(f"Nombre del producto comparado: {self.product_name}")
+                _logger.info(f"Precio del producto comparado: {self.price}")
+                _logger.info(f"Status del producto comparado: {self.product_status}")
             else:
                 _logger.info("No se pudo obtener la información del producto.")
         except Exception as e:
@@ -787,54 +818,91 @@ class MercadoLibreProduct(models.Model):
         return None
     
     def action_save_and_add_competence(self):
-        competence = self.env['mercado.libre.product.compared'].search([
-            ('parent_id', '=', self.id),
-            ('link', '=', self.link)
-            ])
-        if competence:
-            raise UserError("This link has already been used. Enter a new one.")
-        else:
-            self.env['mercado.libre.product.compared'].create({
-                'name': self.product_name,
-                'price': self.price,
-                'link': self.link,
-                'image': self.competence_image,
-                'parent_id': self.id,
-                'currency_id': self.currency_id.id
-            })        
+        _logger.info(f"Intentando obtener data del link: {self.link}")
+        current_user = self.env.user 
+        meli_instance = current_user.meli_instance_id
+        meli_instance.get_access_token()
+        access = meli_instance.access_token
 
-        competence_count = self.env['mercado.libre.product.compared'].search_count([
-            ('parent_id', '=', self.id)
-        ])
+        product_info = self.get_product_info(product_url=self.link, access_token=access)
+        _logger.info(product_info)
 
-        #sI NO existe el name o price = 0 suelta user error
-        if self.product_name == False or self.price == 0:
-            raise UserError("This product is not compatible with the competition rule")
+        try:
+            if product_info:
+                buy_box = product_info.get("buy_box_winner", {})
+                if buy_box==None:
+                    raise UserError("This product is not compatible with the competition rule because the price is not recognized.")
+                nombre = product_info.get("name", "Name not available")
+                precio = product_info.get("buy_box_winner", {}).get("price", 0.0)
+                moneda = product_info.get("buy_box_winner", {}).get("currency_id", "MXN")
+                status = product_info.get("status", "")
+                image_url = product_info.get("pictures", [{"url": None}])[0]["url"]
 
-               
-        self.env['bus.bus']._sendone(
-            self.env.user.partner_id,
-            'simple_notification',
-            {
-            'title': "Updated Rule",
-            'message': f"This rule is being applied to {competence_count} competencies. Product: {self.product_name}, Price: {self.price}",
-            'type': 'success'
-            }
-        )
+                image_base64 = None
+                if image_url:
+                    image_response = requests.get(image_url)
+                    if image_response.status_code == 200:
+                        image_base64 = base64.b64encode(image_response.content).decode("utf-8")
+
+                if not nombre or precio == 0:
+                    raise UserError("This product is not compatible with the competition rule")
+                
+                #sI NO existe el name o price = 0 suelta user error
+                #_logger.info(f"Producto: {self.product_name} precio: {self.price}")
+                #if self.product_name == False or self.price == 0:
+                #    raise UserError("This product is not compatible with the competition rule")
+                
+                competence = self.env['mercado.libre.product.compared'].search([
+                    ('parent_id', '=', self.id),
+                    ('link', '=', self.link)
+                    ])
+                if competence:
+                    raise UserError("This link has already been used. Enter a new one.")
+                else:
+                    self.env['mercado.libre.product.compared'].create({
+                        'name': nombre,
+                        'price': precio,
+                        'status': status,
+                        'condition': "current",
+                        'link': self.link,
+                        'image': image_base64,
+                        'parent_id': self.id,
+                        'currency_id': self.currency_id.id
+                    })        
+
+                competence_count = self.env['mercado.libre.product.compared'].search_count([
+                    ('parent_id', '=', self.id)
+                ])
+                    
+                self.env['bus.bus']._sendone(
+                    self.env.user.partner_id,
+                    'simple_notification',
+                    {
+                    'title': "Updated Rule",
+                    'message': f"This rule is being applied to {competence_count} competencies. Product: {nombre}, Price: {precio}",
+                    'type': 'success'
+                    }
+                )
 
 
-        # Limpiamos solo los campos especificados del producto de la competencia
-        self.write({
-            'link': False,
-            'competence_image': False,
-            'name' : False,
-            'price' : False
-        })
+                # Limpiamos solo los campos especificados del producto de la competencia
+                self.write({
+                    'link': False,
+                    'competence_image': False,
+                    'product_name' : False,
+                    'price' : False
+                })
 
-        self.action_calculate_new_price()
+                self.action_calculate_new_price()
 
-        # 🔹 Hacemos un commit para que la notificación se ejecute antes de refrescar la vista
-        #self.env.cr.commit()
+                # 🔹 Hacemos un commit para que la notificación se ejecute antes de refrescar la vista
+                #self.env.cr.commit()
+            else:
+                _logger.info("No se pudo obtener la información del producto.")
+                raise UserError("No se pudo obtener la información del producto, intente con otro producto.")
+        except Exception as e:
+            _logger.info(f"Error al asignar la información del producto: {str(e)}")
+            raise UserError(f"Error al asignar la información del producto: {str(e)}")
     
     def action_show_notification(self):
         """ Envía una notificación en tiempo real al usuario actual sin return """
@@ -1069,6 +1137,60 @@ class MercadoLibreProduct(models.Model):
                 _logger.info("Ends Item Pricing: %s", item_pricing.name)
         _logger.info("ENDS CRON update_mercadoLibre_price")
 
+    @api.model
+    def cron_check_competitor_prices(self):
+        _logger.info("[CRON] Iniciando revisión diaria de precios competencia en MercadoLibre")
+        for instance in self.env['vex.instance'].search([('store_type','=','mercadolibre')]):
+            instance.get_access_token()
+            access_token = instance.access_token
+            compared_model = self.env['mercado.libre.product.compared']
+            rules = self.env['mercado.libre.product'].search([])
+            _logger.info(f"Reglas de productos encontradas: {len(rules)}")
+            for rule in rules:
+                _logger.info(f"Revisando productos comparados para regla: {rule.id} - {rule.product.name if rule.product else 'Sin producto'}")
+                compared_items = compared_model.search([
+                    ('parent_id', '=', rule.id),
+                    ('condition', '=', 'current')
+                ])
+                _logger.info(f"Total de precios competencia actuales a verificar: {len(compared_items)}")
+                for item in compared_items:
+                    if not item.link:
+                        _logger.warning(f"Precio competencia con ID {item.id} no tiene link. Saltando...")
+                        continue
+                        
+                    try:
+                        url = str(self.link)
+                        _logger.info(f"Consultando información de: {url}")
+                        product_info = self.get_product_info(product_url=url,access_token=access_token)
+                        _logger.info(product_info)
+                        if product_info:
+                            buy_box = product_info.get("buy_box_winner", {})
+                            if buy_box==None:
+                                _logger.warning(f"Precio competencia con ID {item.id} no se reconoce precio del api. Saltando...")
+                                continue
+                            new_price = product_info.get("buy_box_winner", {}).get("price", "Price not available")
+                            new_status = product_info.get("status", "")
+                            _logger.info(f"Comparando precios → Guardado: {item.price} | Nuevo: {new_price}")
+                            if item.price != new_price:
+                                _logger.info(f"Cambio de precio detectado para '{item.name}'")
+                                item.condition = 'past'
+                                _logger.info(f"Precio competencia con (ID {item.id}) marcado como 'past'")
+                                # Crear nuevo registro con el nuevo precio
+                                new_record = item.copy(default={
+                                    'price': new_price,
+                                    'condition': 'current',
+                                    'status': new_status,
+                                })
+                                _logger.info(f"Nuevo registro creado con ID {new_record.id} y precio {new_price}")
+                            else:
+                                _logger.info(f"Precio sin cambios para '{item.name}' (ID {item.id})")
+                        else:
+                            _logger.info(f"No se pudo obtener información del producto desde el link {item.link}")
+                            continue
+                        
+                    except Exception as e:
+                        _logger.warning(f"Error al consultar link {item.link}: {str(e)}", exc_info=True)
+
 class MercadoLibreProductCompared(models.Model):
     _name = 'mercado.libre.product.compared'
 
@@ -1078,7 +1200,10 @@ class MercadoLibreProductCompared(models.Model):
     image = fields.Binary("IMG", store=True)
     currency_id = fields.Many2one("res.currency", string="Currency")
     parent_id = fields.Many2one('mercado.libre.product', string="Registro Padre", ondelete="cascade")
-        
+    status = fields.Char("Status Publication")
+    condition = fields.Char("Price Condition")
+    link_text = fields.Char("Ver en MercadoLibre", compute="_compute_link_text")
+
     @api.model
     def create(self, vals):
         record = super(MercadoLibreProductCompared, self).create(vals)
@@ -1100,3 +1225,8 @@ class MercadoLibreProductCompared(models.Model):
             ('parent_id.instance_id', '=', current_user.meli_instance_id.id),
             ('parent_id.state_publi', '=', 'activo')
         ])
+    
+    @api.depends('link')
+    def _compute_link_text(self):
+        for rec in self:
+            rec.link_text = "To Open in MercadoLibre" if rec.link else ""

@@ -242,9 +242,12 @@ class VexSynchro(models.Model):
         sku_id = self._get_or_create_sku(ml_reference, import_line_id.instance_id.id)
         stock_location_obj = self._get_stock_location(item_data['shipping']['logistic_type'])
 
+        marketplace_fee = self._get_marketplace_fee(headers, item_data['price'], item_data['listing_type_id'], item_data['category_id'], import_line_id.instance_id.id)
+        _logger.info('marketplace_fee%s',marketplace_fee)
+        
         product_values = self._prepare_product_values(
             item_data, category_id, image_1920, attribute_value_tuples,
-            sku_id, stock_location_obj, ml_reference, import_line_id
+            sku_id, stock_location_obj, ml_reference, marketplace_fee, import_line_id
         )
 
         if existing_product_id:
@@ -376,8 +379,21 @@ class VexSynchro(models.Model):
     def _get_stock_location(self, logistic_type):
         return "FULL Mercado Libre Default" if logistic_type == "fulfillment" else "Default Mercado Libre"
 
-
-    def _prepare_product_values(self, item_data, category_id, image_1920, attribute_value_tuples, sku_id, stock_location_obj, ml_reference, import_line_id):
+    def _get_marketplace_fee(self, headers, price, listing_type_id, category_id, instance_id):
+        instance = self.env['vex.instance'].search([('id', '=', instance_id)])
+        code_country = instance.meli_country
+        url = f"https://api.mercadolibre.com/sites/{code_country}/listing_prices?price={price}&listing_type_id={listing_type_id}&category_id={category_id}"
+        _logger.info(url)
+        response = requests.get(url, headers=headers)
+        market_fee = 0.0
+        if response.status_code == 200:
+            res_json = json.loads(response.text)
+            market_fee = res_json['sale_fee_amount']
+        else:
+            _logger.info(response.text)
+        return market_fee
+    
+    def _prepare_product_values(self, item_data, category_id, image_1920, attribute_value_tuples, sku_id, stock_location_obj, ml_reference, marketplace_fee, import_line_id):
         return {
             'categ_id': category_id.id,
             'name': item_data['title'],
@@ -404,7 +420,8 @@ class VexSynchro(models.Model):
             'instance_id': import_line_id.instance_id.id,
             'stock_type': stock_location_obj,
             'upc': next((attr['value_name'] for attr in item_data['attributes'] if attr['id'] == 'GTIN'), None),
-            'store_type': 'mercadolibre'
+            'store_type': 'mercadolibre',
+            'market_fee': marketplace_fee
         }
 
 

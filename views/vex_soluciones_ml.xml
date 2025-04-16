@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <tree string="Rules">
                 <field name="product" string="Publication"/>
-                <field name="price_score"/>
+                <field name="price_score_badge" widget="html"/>
                 <field name="type_rule" string="Type"/>
                 <field name="text_publi" string="Rule"/>
                 <field name="new_price" string="Nuevo Precio"/>
@@ -82,7 +82,7 @@
                                     </p>
                                     <div class="d-flex align-items-center mb-3">
                                         <field name="link" string="Link de Mercado Libre" class="form-control"
-                                            placeholder="Enter the link here. Example: https://listado.mercadolibre.com.mx/altura-desarrollo-crecimiento-energia-ni%C3%B1os-premium-eg-p52#D"/>
+                                            placeholder="Enter a catalog product link here. Example: https://www.mercadolibre.com.mx/quinoa-blanca-1-kg-quinoa-peruana-premium/p/MLM33306411#polycard_client..."/>
                                     </div>
                                     <!-- <div class="d-flex align-items-center border rounded p-3">
                                         <field name="competence_image" widget="image"

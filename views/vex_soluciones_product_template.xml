@@ -75,14 +75,19 @@
                         </div>
                     </div>
 
-                    <field name="automatic_pricing_ids" create="0">
+                    <field name="competitor_price_history_ids">
                         <tree>
-                            <field name="competence_image" widget="image" string="Image"/> <!-- Imagen de la competencia -->
-                            <field name="name" string="Competitor Name"/> <!-- Nombre del competidor -->
-                            <field name="link" string="Competitor Link" widget="url"/> <!-- Enlace del competidor -->
-                            <field name="competence_actual_price" string="Price"/> <!-- Precio de la competencia -->
-                            <field name="write_date" string="Last Updated" widget="datetime"/> <!-- Última actualización -->
-                           
+                            <field name="name"/>
+                            <field name="price"/>
+                            <field name="currency_id"/>
+                            <field name="link" widget="url"/>
+                            <field name="condition"/>
+                            <field name="create_date"/>
+                            <!-- <field name="competence_image" widget="image" string="Image"/>
+                            <field name="name" string="Competitor Name"/>
+                            <field name="link" string="Competitor Link" widget="url"/>
+                            <field name="competence_actual_price" string="Price"/>
+                            <field name="write_date" string="Last Updated" widget="datetime"/> -->
                         </tree>
                     </field>
                 </page>
@@ -144,7 +149,6 @@
                 <field name="mercado_libre_price" string="Mercado Libre Price"/>
                 <field name="shopify_price" string="Shopify Price"/>
                 <field name="upc" string="UPC"/>
-                <field name="price_score" />
                 <!-- <field name="description"/> -->
             </xpath>
 
@@ -172,9 +176,18 @@
                     </div>
                 </group >
             </xpath>
-            <xpath expr="//field[@name='standard_price']" position="after">        
-                <field name="market_fee" string="MELI fee" invisible="store_type != 'mercadolibre'" readonly="1"/>
+            <xpath expr="//field[@name='standard_price']" position="after">
+                <field name="market_fee" string="MELI fee" readonly="1">
+                    <attrs>
+                        <invisible>
+                            <neq field="store_type" value="mercadolibre"/>
+                        </invisible>
+                    </attrs>
+                </field>
             </xpath>
+            <xpath expr="//field[@name='list_price']" position="after">
+                <field name="price_score" invisible="store_type != 'mercadolibre'" readonly="1"/> 
+            </xpath> 
             <xpath expr="//field[@name='default_code']" position="after">        
                 <field name="ml_reference" string="MELI SKU"  invisible="store_type != 'mercadolibre'"/>
                 <field name="ml_publication_code" invisible="store_type != 'mercadolibre'"/>
@@ -201,8 +214,8 @@
                 <field name='buying_mode'/>
                 <!-- <field name='inventory_id'/>   -->             
             </xpath>
-            <xpath expr="//field[@name='standard_price']" position="after">
-                <field name="market_fee" />
+            <xpath expr="//field[@name='standard_price']" position="before">
+                <field name="market_fee" string="MELI fee" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='default_code']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -222,10 +235,11 @@
             <xpath expr="//field[@name='product_tag_ids']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath> 
-            
+            <xpath expr="//field[@name='list_price']" position="before">
+                <field name="price_score" readonly="1"/> 
+            </xpath>  
             <xpath expr="//field[@name='product_tag_ids']" position="after">
                 <field name="performance_score" widget="handle" /> 
-                <field name="price_score"  /> 
                 <field name='performance_level' decoration-danger="performance_score &lt; 60"
                                        decoration-warning="performance_score &lt; 90"
                                        decoration-success="performance_score &gt;= 90"/>

@@ -139,6 +139,17 @@
             <field name="numbercall">-1</field>
             <field name="active" eval="False"/>
         </record>
+
+        <record id="ir_cron_check_competitor_prices" model="ir.cron">
+            <field name="name">Actualizar Precios de Competencia</field>
+            <field name="model_id" ref="model_mercado_libre_product"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_check_competitor_prices()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="False"/>
+        </record>
     </data>
 </odoo>
     

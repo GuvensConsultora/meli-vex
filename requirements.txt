@@ -4,7 +4,7 @@ XlsxWriter
 python-dateutil
 prophet
 pandas
-numpy==1.23.5
+numpy
 matplotlib
 statsmodels
 plotly
@@ -16,4 +16,3 @@ boto3
 requests
 urllib3
 pytz
-pypdf==3.15.1
